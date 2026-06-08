@@ -47,7 +47,7 @@ public class Usuario {
 
     @NotBlank(message = "La contraseña no puede estar vacía")
     @Size(max = 255, message = "La contraseña no puede exceder los 255 caracteres")
-    @Column(name = "Contraseña", length = 255, nullable = false)
+    @Column(name = "Contrasena", length = 255, nullable = false)
     private String contrasena;
 
     @NotNull(message = "El perfil es obligatorio")

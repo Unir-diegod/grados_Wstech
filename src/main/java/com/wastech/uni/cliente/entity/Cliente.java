@@ -26,8 +26,6 @@ import lombok.Setter;
 public class Cliente {
 
     @Id
-    @NotBlank(message = "La cédula no puede estar vacía")
-    @Size(max = 20, message = "La cédula no puede exceder los 20 caracteres")
     @Column(name = "Cedula", nullable = false, length = 20)
     private String cedula;
 
