@@ -20,4 +20,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsuario(String usuario);
 
     boolean existsByUsuario(String usuario);
+    
+    // Para validación en edición: existe usuario que no sea este ID
+    boolean existsByUsuarioAndIdusuarioNot(String usuario, Long idusuario);
+
+    // Para la vista de búsqueda
+    java.util.List<Usuario> findByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCaseOrUsuarioContainingIgnoreCase(
+            String nombre, String apellido, String usuarioBusqueda);
 }

@@ -1,5 +1,6 @@
 package com.wastech.uni.cliente.service;
 
+import com.wastech.uni.cliente.dto.ClienteDTO;
 import com.wastech.uni.cliente.entity.Cliente;
 
 import java.util.List;
@@ -14,9 +15,11 @@ public interface ClienteService {
 
     Optional<Cliente> findById(String cedula);
 
-    List<Cliente> findByNombre(String nombre);
+    List<Cliente> findByCedulaOrNombreOrApellido(String search);
 
-    Cliente save(Cliente cliente);
+    Cliente save(ClienteDTO dto);
+
+    Cliente update(String cedula, ClienteDTO dto);
 
     void deleteById(String cedula);
 

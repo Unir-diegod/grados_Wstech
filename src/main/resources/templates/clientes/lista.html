@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Gestión de Clientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* (Estilos base del dashboard) */
+        :root {
+            --primary: #2ECC71;
+            --bg-color: #f4f7f6;
+            --sidebar-bg: #1a1a2e;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+            --danger: #e74c3c;
+            --warning: #f1c40f;
+            --info: #3498db;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg-color); color: var(--text-dark); display: flex; height: 100vh; }
+
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 20px 0; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-align: center; margin-bottom: 40px; }
+        .logo span { color: var(--text-light); }
+        .nav-item { padding: 15px 25px; color: #A0A0B0; text-decoration: none; display: block; transition: all 0.3s; }
+        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.05); color: var(--text-light); border-left: 4px solid var(--primary); }
+
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .header h1 { font-size: 28px; font-weight: 700; }
+
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: 0.3s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #27AE60; }
+        .btn-sm { padding: 5px 10px; font-size: 13px; border-radius: 4px; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-warning { background: var(--warning); color: #333; }
+        
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background: rgba(46, 204, 113, 0.1); border: 1px solid var(--primary); color: #27AE60; }
+        .alert-error { background: rgba(231, 76, 60, 0.1); border: 1px solid var(--danger); color: var(--danger); }
+
+        .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .form-control { padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; width: 300px; }
+
+        .table-container { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: #7f8c8d; }
+        tr:hover { background: #fdfdfd; }
+        .actions { display: flex; gap: 5px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">Waste<span>ch</span></div>
+        <div class="nav-items">
+            <a th:href="@{/dashboard}" class="nav-item">Dashboard</a>
+            <a th:href="@{/usuarios}" class="nav-item">Usuarios</a>
+            <a th:href="@{/clientes}" class="nav-item active">Clientes</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Gestión de Clientes</h1>
+            <a th:href="@{/clientes/nuevo}" class="btn btn-primary"><i class="ph ph-plus"></i> Nuevo Cliente</a>
+        </div>
+
+        <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <div class="table-container">
+            <form th:action="@{/clientes}" method="get" class="search-bar">
+                <input type="text" name="buscar" class="form-control" placeholder="Buscar por cédula o nombre..." th:value="${buscar}">
+                <button type="submit" class="btn btn-primary"><i class="ph ph-magnifying-glass"></i> Buscar</button>
+                <a th:href="@{/clientes}" class="btn" style="background:#eee;color:#333;">Limpiar</a>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cédula</th>
+                        <th>Nombre Completo</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cliente : ${clientes}">
+                        <td th:text="${cliente.cedula}">1234567890</td>
+                        <td th:text="${cliente.nombre1 + ' ' + (cliente.apellido1 != null ? cliente.apellido1 : '')}">Juan Perez</td>
+                        <td th:text="${cliente.telefono}">0999999999</td>
+                        <td th:text="${cliente.correo}">juan@mail.com</td>
+                        <td class="actions">
+                            <a th:href="@{/clientes/ver/{id}(id=${cliente.cedula})}" class="btn btn-sm btn-info" title="Ver Detalle"><i class="ph ph-eye"></i></a>
+                            <a th:href="@{/clientes/editar/{id}(id=${cliente.cedula})}" class="btn btn-sm btn-warning" title="Editar"><i class="ph ph-pencil"></i></a>
+                        </td>
+                    </tr>
+                    <tr th:if="${clientes == null || clientes.empty}">
+                        <td colspan="5" style="text-align: center; color: #7f8c8d; padding: 30px;">No se encontraron clientes.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

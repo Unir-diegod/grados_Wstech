@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Formulario de Usuario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #2ECC71;
+            --bg-color: #f4f7f6;
+            --sidebar-bg: #1a1a2e;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+            --danger: #e74c3c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg-color); color: var(--text-dark); display: flex; height: 100vh; }
+
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 20px 0; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-align: center; margin-bottom: 40px; }
+        .logo span { color: var(--text-light); }
+        .nav-item { padding: 15px 25px; color: #A0A0B0; text-decoration: none; display: block; transition: all 0.3s; }
+        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.05); color: var(--text-light); border-left: 4px solid var(--primary); }
+
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .header { margin-bottom: 40px; }
+        .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px;}
+
+        .card { background: var(--card-bg); border-radius: 12px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 800px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group.full-width { grid-column: span 2; }
+        
+        label { display: block; font-size: 14px; font-weight: 600; color: #34495e; margin-bottom: 8px; }
+        .form-control, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; transition: border 0.3s; background: white; }
+        .form-control:focus, select:focus { outline: none; border-color: var(--primary); }
+        .error-msg { color: var(--danger); font-size: 12px; margin-top: 5px; display: block; }
+        
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: 0.3s; font-size: 15px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #27AE60; }
+        .btn-secondary { background: #95a5a6; color: white; margin-right: 10px;}
+        .btn-secondary:hover { background: #7f8c8d; }
+        
+        .alert-error { background: rgba(231, 76, 60, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 20px;}
+        .help-text { font-size: 12px; color: #7f8c8d; margin-top: 5px; display: block; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">Waste<span>ch</span></div>
+        <div class="nav-items">
+            <a th:href="@{/dashboard}" class="nav-item">Dashboard</a>
+            <a th:href="@{/usuarios}" class="nav-item active">Usuarios</a>
+            <a th:href="@{/clientes}" class="nav-item">Clientes</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 th:text="${edicion} ? 'Editar Usuario' : 'Nuevo Usuario'">Nuevo Usuario</h1>
+            <a th:href="@{/usuarios}" style="color: #7f8c8d; text-decoration: none;"><i class="ph ph-arrow-left"></i> Volver a la lista</a>
+        </div>
+
+        <div class="card">
+            <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+
+            <form th:action="${edicion} ? @{/usuarios/actualizar/{id}(id=${usuarioDTO.idusuario})} : @{/usuarios}" 
+                  th:object="${usuarioDTO}" method="post">
+                
+                <input type="hidden" th:field="*{idusuario}" />
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombres *</label>
+                        <input type="text" id="nombre" th:field="*{nombre}" class="form-control">
+                        <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellido">Apellidos *</label>
+                        <input type="text" id="apellido" th:field="*{apellido}" class="form-control">
+                        <span th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="usuario">Nombre de Usuario (Username) *</label>
+                        <input type="text" id="usuario" th:field="*{usuario}" class="form-control">
+                        <span th:if="${#fields.hasErrors('usuario')}" th:errors="*{usuario}" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contrasena" th:text="${edicion} ? 'Contraseña (Dejar en blanco para no cambiar)' : 'Contraseña *'">Contraseña</label>
+                        <input type="password" id="contrasena" th:field="*{contrasena}" class="form-control">
+                        <span th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idperfil">Perfil *</label>
+                        <select id="idperfil" th:field="*{idperfil}" class="form-control">
+                            <option value="" disabled selected>Seleccione un perfil...</option>
+                            <option th:each="perfil : ${perfiles}" 
+                                    th:value="${perfil.idperfil}" 
+                                    th:text="${perfil.nombre}"></option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('idperfil')}" th:errors="*{idperfil}" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cedulaCliente">Cliente Asociado (Opcional)</label>
+                        <select id="cedulaCliente" th:field="*{cedulaCliente}" class="form-control">
+                            <option value="">Ninguno</option>
+                            <option th:each="cliente : ${clientes}" 
+                                    th:value="${cliente.cedula}" 
+                                    th:text="${cliente.nombre1 + ' ' + cliente.apellido1 + ' (' + cliente.cedula + ')'}"></option>
+                        </select>
+                        <span class="help-text">Si este usuario es un cliente, asócielo aquí.</span>
+                        <span th:if="${#fields.hasErrors('cedulaCliente')}" th:errors="*{cedulaCliente}" class="error-msg"></span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; text-align: right;">
+                    <a th:href="@{/usuarios}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary" th:text="${edicion} ? 'Actualizar Usuario' : 'Guardar Usuario'">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

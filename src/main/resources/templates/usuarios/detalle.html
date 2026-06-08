@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Detalle de Usuario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #2ECC71;
+            --bg-color: #f4f7f6;
+            --sidebar-bg: #1a1a2e;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg-color); color: var(--text-dark); display: flex; height: 100vh; }
+
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 20px 0; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-align: center; margin-bottom: 40px; }
+        .logo span { color: var(--text-light); }
+        .nav-item { padding: 15px 25px; color: #A0A0B0; text-decoration: none; display: block; transition: all 0.3s; }
+        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.05); color: var(--text-light); border-left: 4px solid var(--primary); }
+
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .header { margin-bottom: 40px; }
+        .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px;}
+
+        .card { background: var(--card-bg); border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 800px; }
+        
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;}
+        .detail-item label { display: block; font-size: 13px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .detail-item p { font-size: 16px; font-weight: 600; color: #2c3e50; }
+        
+        .avatar { width: 80px; height: 80px; background: #3498db; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; margin-bottom: 20px; }
+
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: 0.3s; }
+        .btn-warning { background: #f1c40f; color: #333; }
+        .btn-warning:hover { background: #f39c12; }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .badge-admin { background: rgba(241, 196, 15, 0.2); color: #f39c12; }
+        .badge-cliente { background: rgba(52, 152, 219, 0.2); color: #2980b9; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">Waste<span>ch</span></div>
+        <div class="nav-items">
+            <a th:href="@{/dashboard}" class="nav-item">Dashboard</a>
+            <a th:href="@{/usuarios}" class="nav-item active">Usuarios</a>
+            <a th:href="@{/clientes}" class="nav-item">Clientes</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Detalle del Usuario</h1>
+            <a th:href="@{/usuarios}" style="color: #7f8c8d; text-decoration: none;"><i class="ph ph-arrow-left"></i> Volver a la lista</a>
+        </div>
+
+        <div class="card" th:if="${usuarioObj != null}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="avatar" th:text="${#strings.substring(usuarioObj.nombre,0,1)}">J</div>
+                <a th:href="@{/usuarios/editar/{id}(id=${usuarioObj.idusuario})}" class="btn btn-warning"><i class="ph ph-pencil"></i> Editar Usuario</a>
+            </div>
+            
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>ID Usuario</label>
+                    <p th:text="${usuarioObj.idusuario}">1</p>
+                </div>
+                <div class="detail-item">
+                    <label>Nombre Completo</label>
+                    <p th:text="${usuarioObj.nombre + ' ' + usuarioObj.apellido}">Juan Perez</p>
+                </div>
+                <div class="detail-item">
+                    <label>Nombre de Usuario (Username)</label>
+                    <p th:text="${usuarioObj.usuario}">jperez</p>
+                </div>
+                <div class="detail-item">
+                    <label>Perfil</label>
+                    <p>
+                        <span th:class="${usuarioObj.perfil.nombre == 'ADMINISTRADOR' ? 'badge badge-admin' : 'badge badge-cliente'}" 
+                              th:text="${usuarioObj.perfil.nombre}">ADMIN</span>
+                    </p>
+                </div>
+                <div class="detail-item" style="grid-column: span 2;">
+                    <label>Cliente Asociado</label>
+                    <div th:if="${usuarioObj.cliente != null}" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+                        <p style="margin-bottom: 5px;" th:text="${usuarioObj.cliente.nombre1 + ' ' + usuarioObj.cliente.apellido1}"></p>
+                        <p style="font-size: 13px; color: #7f8c8d;">Cédula: <span th:text="${usuarioObj.cliente.cedula}"></span></p>
+                        <a th:href="@{/clientes/ver/{id}(id=${usuarioObj.cliente.cedula})}" style="font-size: 13px; color: var(--primary); text-decoration: none; display: inline-block; margin-top: 5px;">Ver perfil de cliente &rarr;</a>
+                    </div>
+                    <p th:if="${usuarioObj.cliente == null}">Ningún cliente asociado a este usuario.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Detalle de Cliente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #2ECC71;
+            --bg-color: #f4f7f6;
+            --sidebar-bg: #1a1a2e;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg-color); color: var(--text-dark); display: flex; height: 100vh; }
+
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 20px 0; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-align: center; margin-bottom: 40px; }
+        .logo span { color: var(--text-light); }
+        .nav-item { padding: 15px 25px; color: #A0A0B0; text-decoration: none; display: block; transition: all 0.3s; }
+        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.05); color: var(--text-light); border-left: 4px solid var(--primary); }
+
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .header { margin-bottom: 40px; }
+        .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px;}
+
+        .card { background: var(--card-bg); border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 800px; }
+        
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;}
+        .detail-item label { display: block; font-size: 13px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .detail-item p { font-size: 16px; font-weight: 600; color: #2c3e50; }
+        .detail-item.full-width { grid-column: span 2; }
+        
+        .avatar { width: 80px; height: 80px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; margin-bottom: 20px; }
+
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: 0.3s; }
+        .btn-warning { background: #f1c40f; color: #333; }
+        .btn-warning:hover { background: #f39c12; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">Waste<span>ch</span></div>
+        <div class="nav-items">
+            <a th:href="@{/dashboard}" class="nav-item">Dashboard</a>
+            <a th:href="@{/usuarios}" class="nav-item">Usuarios</a>
+            <a th:href="@{/clientes}" class="nav-item active">Clientes</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Detalle del Cliente</h1>
+            <a th:href="@{/clientes}" style="color: #7f8c8d; text-decoration: none;"><i class="ph ph-arrow-left"></i> Volver a la lista</a>
+        </div>
+
+        <div class="card" th:if="${cliente != null}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="avatar" th:text="${#strings.substring(cliente.nombre1,0,1)}">J</div>
+                <a th:href="@{/clientes/editar/{id}(id=${cliente.cedula})}" class="btn btn-warning"><i class="ph ph-pencil"></i> Editar Cliente</a>
+            </div>
+            
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Cédula</label>
+                    <p th:text="${cliente.cedula}">1234567890</p>
+                </div>
+                <div class="detail-item">
+                    <label>Nombre Completo</label>
+                    <p th:text="${cliente.nombre1 + ' ' + (cliente.nombre2 != null ? cliente.nombre2 : '') + ' ' + cliente.apellido1 + ' ' + (cliente.apellido2 != null ? cliente.apellido2 : '')}">Juan Perez</p>
+                </div>
+                <div class="detail-item">
+                    <label>Teléfono</label>
+                    <p th:text="${cliente.telefono != null && !cliente.telefono.empty ? cliente.telefono : 'N/A'}">0999999999</p>
+                </div>
+                <div class="detail-item">
+                    <label>Correo Electrónico</label>
+                    <p th:text="${cliente.correo != null && !cliente.correo.empty ? cliente.correo : 'N/A'}">juan@mail.com</p>
+                </div>
+                <div class="detail-item full-width">
+                    <label>Dirección</label>
+                    <p th:text="${cliente.direccion != null && !cliente.direccion.empty ? cliente.direccion : 'N/A'}">Calle Falsa 123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
