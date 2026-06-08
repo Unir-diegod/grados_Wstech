@@ -14,8 +14,14 @@ import java.util.Optional;
  *  - findByUsuario(String username) para autenticación con Spring Security
  *  - findByClienteCedula(String cedula) para búsqueda por cliente
  */
+import org.springframework.data.jpa.repository.EntityGraph;
+
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
+    @Override
+    @EntityGraph(attributePaths = {"perfil", "cliente"})
+    java.util.List<Usuario> findAll();
 
     Optional<Usuario> findByUsuario(String usuario);
 
@@ -25,6 +31,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     boolean existsByUsuarioAndIdusuarioNot(String usuario, Long idusuario);
 
     // Para la vista de búsqueda
+    @EntityGraph(attributePaths = {"perfil", "cliente"})
     java.util.List<Usuario> findByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCaseOrUsuarioContainingIgnoreCase(
             String nombre, String apellido, String usuarioBusqueda);
 }
