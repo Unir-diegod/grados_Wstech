@@ -26,6 +26,4 @@ public interface UsuarioService {
     void deleteById(Long id);
 
     boolean existsByUsuario(String username);
-
-    boolean existsByUsuario(String username);
 }
