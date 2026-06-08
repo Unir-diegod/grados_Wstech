@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2ECC71;
+            --bg-color: #f4f7f6;
+            --sidebar-bg: #1a1a2e;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo span {
+            color: var(--text-light);
+        }
+
+        .nav-items {
+            flex: 1;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            color: #A0A0B0;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            border-left: 4px solid var(--primary);
+        }
+
+        .logout-form {
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 12px;
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-msg h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .welcome-msg p {
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .user-badge {
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .role-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        /* Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-top: 4px solid var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">Waste<span>ch</span></div>
+        <div class="nav-items">
+            <a href="#" class="nav-item active">Dashboard</a>
+            <a href="#" class="nav-item">Procesos</a>
+            <a href="#" class="nav-item">Dispositivos</a>
+            <a href="#" class="nav-item">Reportes</a>
+        </div>
+        
+        <div class="logout-form">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="welcome-msg">
+                <h1>Bienvenido de nuevo, <span th:text="${username}">Usuario</span> 👋</h1>
+                <p>Resumen de actividad para el día de hoy: <span th:text="${fecha}">01/01/2026</span></p>
+            </div>
+            <div class="user-badge">
+                <span th:text="${username}">User</span>
+                <span class="role-tag" th:text="${role}">ROL</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Estado del Sistema</h3>
+                <p>Todos los sensores y deshidratadores se encuentran operando dentro de los parámetros normales.</p>
+            </div>
+            <div class="card">
+                <h3>Prueba de Roles</h3>
+                <p>Navega a los controladores de prueba protegidos para validar permisos:</p>
+                <br>
+                <p>👉 <a th:href="@{/admin/test}">/admin/test</a> (Solo Admin)</p>
+                <p>👉 <a th:href="@{/cliente/test}">/cliente/test</a> (Admin y Cliente)</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
