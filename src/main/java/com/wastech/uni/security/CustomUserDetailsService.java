@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Servicio para cargar los detalles del usuario durante la autenticación de Spring Security.
  */
@@ -21,6 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Buscar el usuario por nombre de usuario
         Usuario usuario = usuarioRepository.findByUsuario(username)
