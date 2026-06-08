@@ -1,9 +1,8 @@
 package com.wastech.uni.sensor.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,10 @@ import lombok.Setter;
  * Entidad TipoSensor.
  * Relación JPA:
  * - Es referenciada por Sensores a través de ID_tiposensor.
+ * - Un TipoSensor puede tener múltiples Sensores asociados (1:N).
  */
 @Entity
-@Table(name = "tipo_sensor") // Espacio no válido en base de datos típica, usamos guion bajo
+@Table(name = "tipo_sensor")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,9 +23,12 @@ import lombok.Setter;
 public class TipoSensor {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_tiposensor", nullable = false)
     private Long idTipoSensor;
 
-    @Column(name = "nombre_sesor", length = 50) // Respetando el typo de la imagen "nombre_sesor"
+    @NotBlank(message = "El nombre del tipo de sensor no puede estar vacío")
+    @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres")
+    @Column(name = "nombre_sesor", length = 50, nullable = false) // Nombre de columna respeta el diagrama original
     private String nombreSesor;
 }
