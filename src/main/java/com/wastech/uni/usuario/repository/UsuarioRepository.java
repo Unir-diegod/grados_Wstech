@@ -25,6 +25,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByUsuario(String usuario);
 
+    Optional<Usuario> findByClienteCorreo(String correo);
+
+    Optional<Usuario> findFirstByClienteCorreoOrderByIdusuarioAsc(String correo);
+
+    boolean existsByClienteCorreo(String correo);
+
     boolean existsByUsuario(String usuario);
     
     // Para validación en edición: existe usuario que no sea este ID

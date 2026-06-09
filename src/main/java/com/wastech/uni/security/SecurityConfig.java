@@ -24,6 +24,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 // Recursos estáticos públicos
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                // Rutas públicas para recuperación de contraseña
+                .requestMatchers("/forgot-password", "/forgot-password/**", "/reset-password", "/reset-password/**").permitAll()
+                .requestMatchers("/registro", "/registro/**").permitAll()
                 // Control de roles
                 .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                 .requestMatchers("/cliente/**").hasAnyRole("ADMINISTRADOR", "CLIENTE")

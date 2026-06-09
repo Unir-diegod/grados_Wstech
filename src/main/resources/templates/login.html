@@ -175,6 +175,7 @@
         <div th:if="${param.logout}" class="alert alert-success">
             Has cerrado sesión exitosamente.
         </div>
+        <div th:if="${registroExitoso}" class="alert alert-success" th:text="${registroExitoso}"></div>
 
         <form th:action="@{/login}" method="post">
             <div class="form-group">
@@ -194,6 +195,13 @@
 
             <button type="submit" class="btn-submit">Iniciar Sesión</button>
         </form>
+        <div style="margin-top:12px; text-align:left;">
+            <a th:href="@{/forgot-password}" style="color:var(--primary); text-decoration:none;">¿Olvidaste tu contraseña?</a>
+        </div>
+        <div style="margin-top:10px; text-align:left;">
+            <span style="color:var(--text-muted);">¿No tienes cuenta?</span>
+            <a th:href="@{/registro}" style="color:var(--primary); margin-left:8px; text-decoration:none;">Crear cuenta</a>
+        </div>
     </div>
 
     <script>

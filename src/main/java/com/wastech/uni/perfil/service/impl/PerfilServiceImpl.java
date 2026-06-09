@@ -33,7 +33,7 @@ public class PerfilServiceImpl implements PerfilService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Perfil> findByNombre(String nombre) {
-        return perfilRepository.findByNombre(nombre);
+        return perfilRepository.findFirstByNombreOrderByIdperfilAsc(nombre);
     }
 
     @Override

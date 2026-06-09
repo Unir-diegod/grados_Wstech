@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Crear Cuenta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2ECC71;
+            --primary-dark: #27AE60;
+            --bg-color: #1a1a2e;
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0B0;
+            --error: #E74C3C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top right, #16213e, var(--bg-color));
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 760px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .logo span { color: var(--text-main); }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 22px;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 11px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2);
+        }
+
+        .error-msg {
+            display: block;
+            margin-top: 4px;
+            color: #ff8b8b;
+            font-size: 12px;
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--error);
+            color: #ff8b8b;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 14px;
+        }
+
+        .actions {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-submit {
+            padding: 12px 18px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover { background: var(--primary-dark); }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        @media (max-width: 780px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .actions { flex-direction: column; gap: 12px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">Waste<span>ch</span></div>
+        <div class="subtitle">Crear cuenta de cliente</div>
+
+        <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+
+        <form th:action="@{/registro}" th:object="${registroCuentaDTO}" method="post">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="cedula">Cédula *</label>
+                    <input id="cedula" type="text" th:field="*{cedula}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('cedula')}" th:errors="*{cedula}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo *</label>
+                    <input id="correo" type="email" th:field="*{correo}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre1">Primer nombre *</label>
+                    <input id="nombre1" type="text" th:field="*{nombre1}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('nombre1')}" th:errors="*{nombre1}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="nombre2">Segundo nombre</label>
+                    <input id="nombre2" type="text" th:field="*{nombre2}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('nombre2')}" th:errors="*{nombre2}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido1">Primer apellido *</label>
+                    <input id="apellido1" type="text" th:field="*{apellido1}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('apellido1')}" th:errors="*{apellido1}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="apellido2">Segundo apellido</label>
+                    <input id="apellido2" type="text" th:field="*{apellido2}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('apellido2')}" th:errors="*{apellido2}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input id="telefono" type="text" th:field="*{telefono}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+                </div>
+                <div class="form-group full-width">
+                    <label for="direccion">Dirección</label>
+                    <input id="direccion" type="text" th:field="*{direccion}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="usuario">Nombre de usuario *</label>
+                    <input id="usuario" type="text" th:field="*{usuario}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('usuario')}" th:errors="*{usuario}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="contrasena">Contraseña *</label>
+                    <input id="contrasena" type="password" th:field="*{contrasena}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="confirmarContrasena">Confirmar contraseña *</label>
+                    <input id="confirmarContrasena" type="password" th:field="*{confirmarContrasena}" class="form-control">
+                    <span class="error-msg" th:if="${#fields.hasErrors('confirmarContrasena')}" th:errors="*{confirmarContrasena}"></span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a th:href="@{/login}" class="back-link">Volver al login</a>
+                <button type="submit" class="btn-submit">Crear cuenta</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
