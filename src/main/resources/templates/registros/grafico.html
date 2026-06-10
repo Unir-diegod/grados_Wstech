@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Gráfica de Telemetría</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #10B981;
+            --primary-dark: #059669;
+            --primary-glow: rgba(16, 185, 129, 0.2);
+            --bg-color: #f8fafc;
+            --sidebar-bg: #0f172a;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --panel-bg: #ffffff;
+            --border: #e2e8f0;
+            --success: #10B981;
+            --info: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-section h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-section p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        /* Chart Panel */
+        .chart-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 450px;
+            width: 100%;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 800px) {
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .detail-card h3 {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .detail-card p {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-dark);
+        }
+
+        .badge-finalized {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar(activePage='reportes')}" class="sidebar"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <div class="header-section">
+            <div>
+                <h1>Gráfica de Monitoreo</h1>
+                <p th:text="${'Monitoreo detallado para el Ciclo #' + registro.idRegistro}"></p>
+            </div>
+            <div>
+                <a th:href="@{/registros}" class="btn btn-outline"><i class="ph ph-arrow-left"></i> Volver a Ciclos</a>
+            </div>
+        </div>
+
+        <!-- Ficha de detalles del ciclo -->
+        <div class="details-grid">
+            <div class="detail-card">
+                <h3>Dispositivo</h3>
+                <p th:text="${'Deshidratador DH-' + registro.deshidratador.idDeshidratador}"></p>
+            </div>
+            <div class="detail-card">
+                <h3>Materia Prima / Cantidad</h3>
+                <p th:text="${registro.tipoMateriaPrima.nombre + ' / ' + registro.cantidad + ' kg'}"></p>
+            </div>
+            <div class="detail-card">
+                <h3>Compostaje Seleccionado</h3>
+                <p th:text="${registro.tipoCompostaje.compuestos}"></p>
+            </div>
+            <div class="detail-card">
+                <h3>Estado de Ciclo</h3>
+                <div style="margin-top: 4px;">
+                    <span class="badge" th:classappend="${'ACTIVO'.equalsIgnoreCase(registro.estado) ? 'badge-active' : 'badge-finalized'}">
+                        <i th:class="${'ACTIVO'.equalsIgnoreCase(registro.estado) ? 'ph ph-play' : 'ph ph-check'}"></i>
+                        <span id="cycleStatus" th:text="${registro.estado}">ACTIVO</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenedor del Gráfico -->
+        <div class="chart-panel">
+            <div class="chart-container">
+                <canvas id="telemetryChart"></canvas>
+            </div>
+        </div>
+
+    </main>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const registroId = [[${registro.idRegistro}]];
+        const isCycleActive = [[${'ACTIVO'.equalsIgnoreCase(registro.estado)}]];
+        /*]]>*/
+
+        let chart;
+
+        function initChart() {
+            const ctx = document.getElementById('telemetryChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Temperatura (°C)',
+                            data: [],
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            fill: true,
+                            yAxisID: 'yTemp'
+                        },
+                        {
+                            label: 'Humedad (%)',
+                            data: [],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            fill: true,
+                            yAxisID: 'yHum'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Fecha y Hora de Lectura'
+                            }
+                        },
+                        yTemp: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Temperatura (°C)'
+                            },
+                            min: 0,
+                            max: 100
+                        },
+                        yHum: {
+                            type: 'linear',
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Humedad (%)'
+                            },
+                            min: 0,
+                            max: 100,
+                            grid: {
+                                drawOnChartArea: false // Evitar superposición de grillas
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+
+        function fetchTelemetry() {
+            fetch(`/api/registros/${registroId}/lecturas`)
+                .then(res => res.json())
+                .then(data => {
+                    const tempLabels = [];
+                    const tempValues = [];
+                    const humValues = [];
+
+                    // Agrupar lecturas por timestamp
+                    const grouped = {};
+                    data.forEach(item => {
+                        if (!grouped[item.fecha]) {
+                            grouped[item.fecha] = {};
+                        }
+                        grouped[item.fecha][item.tipo] = item.valor;
+                    });
+
+                    // Extraer los vectores de tiempo y lecturas
+                    Object.keys(grouped).forEach(fecha => {
+                        tempLabels.push(fecha);
+                        tempValues.push(grouped[fecha]['TEMPERATURA'] !== undefined ? grouped[fecha]['TEMPERATURA'] : null);
+                        humValues.push(grouped[fecha]['HUMEDAD'] !== undefined ? grouped[fecha]['HUMEDAD'] : null);
+                    });
+
+                    chart.data.labels = tempLabels;
+                    chart.data.datasets[0].data = tempValues;
+                    chart.data.datasets[1].data = humValues;
+                    chart.update();
+                })
+                .catch(err => console.error("Error cargando telemetría del ciclo:", err));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            fetchTelemetry();
+
+            // Si el ciclo de compostaje está activo, actualizar la gráfica cada 5 segundos
+            if (isCycleActive) {
+                setInterval(fetchTelemetry, 5000);
+            }
+        });
+    </script>
+</body>
+</html>

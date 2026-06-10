@@ -1,7 +1,5 @@
 package com.wastech.uni.deshidratador.controller;
 
-import com.wastech.uni.deshidratador.service.DeshidratadorService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,13 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/deshidratadores")
-@RequiredArgsConstructor
 public class DeshidratadorController {
-
-    private final DeshidratadorService deshidratadorService;
 
     @org.springframework.web.bind.annotation.GetMapping
     public String index() {
-        return "en-construccion";
+        return "deshidratadores/lista";
+    }
+
+    @org.springframework.web.bind.annotation.GetMapping("/nuevo")
+    public String nuevo() {
+        return "deshidratadores/formulario";
     }
 }

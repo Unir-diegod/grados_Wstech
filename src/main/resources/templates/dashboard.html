@@ -698,25 +698,7 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo"><img th:src="@{/img/logo.jpeg}" alt="Wastech" style="width: 120px; height: auto; border-radius: 8px;"></div>
-        <div class="nav-items">
-            <a th:href="@{/dashboard}" class="nav-item active">Dashboard</a>
-            <a th:href="@{/usuarios}" class="nav-item">Usuarios</a>
-            <a th:href="@{/clientes}" class="nav-item">Clientes</a>
-            <a th:href="@{/deshidratadores}" class="nav-item">Deshidratadores</a>
-            <a th:href="@{/compostaje}" class="nav-item">Compostaje</a>
-            <a th:href="@{/sensores}" class="nav-item">Sensores IoT</a>
-            <a th:href="@{/reportes}" class="nav-item">Reportes</a>
-            <a th:href="@{/configuracion}" class="nav-item">Configuración</a>
-        </div>
-        
-        <div class="logout-form">
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="btn-logout">Cerrar Sesión</button>
-            </form>
-        </div>
-    </div>
+    <div th:replace="~{fragments/sidebar :: sidebar(activePage='dashboard')}" class="sidebar"></div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -741,7 +723,7 @@
                 <div class="metric-icon green"><i class="ph ph-users-three"></i></div>
                 <div class="metric-data">
                     <h3>Clientes Activos</h3>
-                    <div class="value">124</div>
+                    <div class="value" id="totalClientes">1</div>
                     <div class="trend up"><i class="ph ph-trend-up"></i> +12% este mes</div>
                 </div>
             </div>
@@ -749,7 +731,7 @@
                 <div class="metric-icon blue"><i class="ph ph-leaf"></i></div>
                 <div class="metric-data">
                     <h3>Compostaje Procesado</h3>
-                    <div class="value">8.5 <span>ton</span></div>
+                    <div class="value" id="totalCompostaje">0.0 <span>ton</span></div>
                     <div class="trend up"><i class="ph ph-trend-up"></i> +4.2% vs sem. ant.</div>
                 </div>
             </div>
@@ -757,15 +739,15 @@
                 <div class="metric-icon orange"><i class="ph ph-thermometer-hot"></i></div>
                 <div class="metric-data">
                     <h3>Deshidratadores</h3>
-                    <div class="value">42 <span>activos</span></div>
-                    <div class="trend neutral"><i class="ph ph-check-circle"></i> 98% operatividad</div>
+                    <div class="value" id="totalDeshidratadores">1 <span>activo</span></div>
+                    <div class="trend neutral"><i class="ph ph-check-circle"></i> 100% operatividad</div>
                 </div>
             </div>
             <div class="metric-card">
                 <div class="metric-icon red"><i class="ph ph-warning-circle"></i></div>
                 <div class="metric-data">
                     <h3>Alertas Pendientes</h3>
-                    <div class="value">3</div>
+                    <div class="value" id="totalAlertas">0</div>
                     <div class="trend down"><i class="ph ph-trend-down"></i> -2 desde ayer</div>
                 </div>
             </div>
@@ -824,41 +806,10 @@
             <!-- Panel: Actividad Reciente -->
             <div class="panel">
                 <div class="panel-header">
-                    <h3><i class="ph ph-clock-counter-clockwise"></i> Actividad Reciente</h3>
+                    <h3><i class="ph ph-clock-counter-clockwise"></i> Alertas Recientes</h3>
                 </div>
-                <div class="panel-body">
-                    <div class="activity-item">
-                        <div class="activity-icon act-success"><i class="ph ph-wrench"></i></div>
-                        <div class="activity-text">
-                            <strong>Mantenimiento completado</strong>
-                            <span>Deshidratador DH-402 revisado</span>
-                        </div>
-                        <div class="activity-time">Hace 2h</div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon act-danger"><i class="ph ph-thermometer-hot"></i></div>
-                        <div class="activity-text">
-                            <strong>Alerta de temperatura</strong>
-                            <span>Compostera CP-12 excedió 65°C</span>
-                        </div>
-                        <div class="activity-time">Hace 5h</div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon act-info"><i class="ph ph-user-plus"></i></div>
-                        <div class="activity-text">
-                            <strong>Nuevo cliente registrado</strong>
-                            <span>Empresa EcoGlobal</span>
-                        </div>
-                        <div class="activity-time">Ayer</div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon act-success"><i class="ph ph-hard-drives"></i></div>
-                        <div class="activity-text">
-                            <strong>Backup semanal exitoso</strong>
-                            <span>Copia de seguridad completada</span>
-                        </div>
-                        <div class="activity-time">Ayer</div>
-                    </div>
+                <div class="panel-body" id="activityList">
+                    <div style="color: var(--muted); text-align: center; padding: 20px;">Cargando alertas...</div>
                 </div>
             </div>
 
@@ -871,37 +822,37 @@
                     <div class="progress-row">
                         <div class="progress-header">
                             <span>Deshidratadores operativos</span>
-                            <span>95%</span>
+                            <span>100%</span>
                         </div>
                         <div class="progress-track">
-                            <div class="progress-fill" style="width: 95%; background: var(--primary);"></div>
+                            <div class="progress-fill" style="width: 100%; background: var(--primary);"></div>
                         </div>
                     </div>
                     <div class="progress-row">
                         <div class="progress-header">
                             <span>Sensores conectados</span>
-                            <span>88%</span>
+                            <span>100%</span>
                         </div>
                         <div class="progress-track">
-                            <div class="progress-fill" style="width: 88%; background: var(--info);"></div>
+                            <div class="progress-fill" style="width: 100%; background: var(--info);"></div>
                         </div>
                     </div>
                     <div class="progress-row">
                         <div class="progress-header">
                             <span>Capacidad almacenamiento</span>
-                            <span>45%</span>
+                            <span>10%</span>
                         </div>
                         <div class="progress-track">
-                            <div class="progress-fill" style="width: 45%; background: var(--warning);"></div>
+                            <div class="progress-fill" style="width: 10%; background: var(--warning);"></div>
                         </div>
                     </div>
                     <div class="progress-row">
                         <div class="progress-header">
                             <span>Uso de API externa</span>
-                            <span>72%</span>
+                            <span>0%</span>
                         </div>
                         <div class="progress-track">
-                            <div class="progress-fill" style="width: 72%; background: var(--info);"></div>
+                            <div class="progress-fill" style="width: 0%; background: var(--info);"></div>
                         </div>
                     </div>
                 </div>
@@ -982,6 +933,44 @@
 
         menuToggle.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
+
+        // Polling para actualizar estadísticas y alertas del dashboard
+        function actualizarDashboard() {
+            fetch('/api/dashboard/stats')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('totalClientes').innerText = data.totalClientes;
+                    document.getElementById('totalCompostaje').innerHTML = data.totalCompostaje + ' <span>ton</span>';
+                    document.getElementById('totalDeshidratadores').innerHTML = data.totalDeshidratadores + ' <span>activos</span>';
+                    document.getElementById('totalAlertas').innerText = data.totalAlertas;
+
+                    // Actualizar lista de alertas recientes
+                    const container = document.getElementById('activityList');
+                    if (container) {
+                        container.innerHTML = '';
+                        if (data.alertasRecientes.length === 0) {
+                            container.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 20px;">Sin alertas registradas.</div>';
+                        } else {
+                            data.alertasRecientes.forEach(alerta => {
+                                container.innerHTML += `
+                                    <div class="activity-item">
+                                        <div class="activity-icon act-danger"><i class="ph ph-thermometer-hot"></i></div>
+                                        <div class="activity-text">
+                                            <strong>Alerta de Temperatura</strong>
+                                            <span style="font-size: 13px; color: var(--text-dark); display: block; margin-top: 2px;">${alerta.mensaje}</span>
+                                        </div>
+                                        <div class="activity-time">${alerta.fecha}</div>
+                                    </div>
+                                `;
+                            });
+                        }
+                    }
+                })
+                .catch(err => console.error("Error al actualizar dashboard:", err));
+        }
+
+        actualizarDashboard();
+        setInterval(actualizarDashboard, 3000);
     </script>
 </body>
 </html>

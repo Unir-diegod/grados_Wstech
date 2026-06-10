@@ -1,0 +1,161 @@
+<div th:fragment="sidebar(activePage)" class="sidebar">
+    <!-- Fragment CSS Styles for Sidebar -->
+    <style>
+        :root {
+            --primary: #2ECC71;
+            --primary-dark: #27AE60;
+            --primary-glow: rgba(46, 204, 113, 0.4);
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: rgba(255, 255, 255, 0.08);
+            --text-light: #f8fafc;
+            --grad-primary: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            background-image: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.05);
+            z-index: 50;
+            flex-shrink: 0;
+            height: 100vh;
+        }
+
+        .logo {
+            padding: 0 24px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .nav-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px;
+        }
+
+        .nav-items::-webkit-scrollbar { width: 4px; }
+        .nav-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        .nav-item {
+            padding: 14px 20px;
+            color: #94a3b8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: var(--sidebar-hover);
+            color: var(--text-light);
+            transform: translateX(4px);
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.1);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--grad-primary);
+            color: white;
+            box-shadow: 0 4px 12px var(--primary-glow);
+            font-weight: 600;
+        }
+        
+        .nav-item.active i { color: white; }
+        .nav-item.active:hover { transform: none; }
+
+        .logout-form {
+            padding: 20px 16px;
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #ef4444;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                top: 0; left: -280px; bottom: 0;
+                width: 260px;
+                z-index: 100;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            }
+            .sidebar.active { left: 0; }
+        }
+    </style>
+
+    <div class="logo">
+        <img th:src="@{/img/logo.jpeg}" alt="Wastech" style="width: 120px; height: auto; border-radius: 8px;">
+    </div>
+    <div class="nav-items">
+        <a th:href="@{/dashboard}" class="nav-item" th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
+            <i class="ph ph-squares-four"></i> Dashboard
+        </a>
+        <a th:href="@{/usuarios}" class="nav-item" th:classappend="${activePage == 'usuarios' ? 'active' : ''}">
+            <i class="ph ph-users-three"></i> Usuarios
+        </a>
+        <a th:href="@{/clientes}" class="nav-item" th:classappend="${activePage == 'clientes' ? 'active' : ''}">
+            <i class="ph ph-buildings"></i> Clientes
+        </a>
+        <a th:href="@{/deshidratadores}" class="nav-item" th:classappend="${activePage == 'deshidratadores' ? 'active' : ''}">
+            <i class="ph ph-thermometer-hot"></i> Deshidratadores
+        </a>
+        <a th:href="@{/compostaje}" class="nav-item" th:classappend="${activePage == 'compostaje' ? 'active' : ''}">
+            <i class="ph ph-leaf"></i> Compostaje
+        </a>
+        <a th:href="@{/sensores}" class="nav-item" th:classappend="${activePage == 'sensores' ? 'active' : ''}">
+            <i class="ph ph-broadcast"></i> Sensores IoT
+        </a>
+        <a th:href="@{/reportes}" class="nav-item" th:classappend="${activePage == 'reportes' ? 'active' : ''}">
+            <i class="ph ph-file-text"></i> Reportes
+        </a>
+        <a th:href="@{/configuracion}" class="nav-item" th:classappend="${activePage == 'configuracion' ? 'active' : ''}">
+            <i class="ph ph-gear-six"></i> Configuración
+        </a>
+    </div>
+    
+    <div class="logout-form">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">
+                <i class="ph ph-sign-out"></i> Cerrar Sesión
+            </button>
+        </form>
+    </div>
+</div>

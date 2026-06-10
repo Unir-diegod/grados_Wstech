@@ -9,7 +9,6 @@
         :root {
             --primary: #2ECC71;
             --bg-color: #f4f7f6;
-            --sidebar-bg: #1a1a2e;
             --text-dark: #2c3e50;
             --text-light: #ffffff;
             --card-bg: #ffffff;
@@ -27,69 +26,6 @@
             color: var(--text-dark);
             display: flex;
             height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background: var(--sidebar-bg);
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
-            padding: 20px 0;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary);
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo span {
-            color: var(--text-light);
-        }
-
-        .nav-items {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            padding: 15px 25px;
-            color: #A0A0B0;
-            text-decoration: none;
-            display: block;
-            transition: all 0.3s;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-light);
-            border-left: 4px solid var(--primary);
-        }
-
-        .logout-form {
-            padding: 20px;
-            margin-top: auto;
-        }
-
-        .btn-logout {
-            width: 100%;
-            padding: 12px;
-            background: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-            border: 1px solid rgba(231, 76, 60, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-logout:hover {
-            background: #e74c3c;
-            color: #fff;
         }
 
         /* Main Content */
@@ -159,25 +95,7 @@
 <body>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo"><img th:src="@{/img/logo.jpeg}" alt="Wastech" style="width: 120px; height: auto; border-radius: 8px;"></div>
-        <div class="nav-items">
-            <a th:href="@{/dashboard}" class="nav-item">Dashboard</a>
-            <a th:href="@{/usuarios}" class="nav-item">Usuarios</a>
-            <a th:href="@{/clientes}" class="nav-item">Clientes</a>
-            <a th:href="@{/deshidratadores}" class="nav-item">Deshidratadores</a>
-            <a th:href="@{/compostaje}" class="nav-item">Compostaje</a>
-            <a th:href="@{/sensores}" class="nav-item">Sensores IoT</a>
-            <a th:href="@{/reportes}" class="nav-item">Reportes</a>
-            <a th:href="@{/configuracion}" class="nav-item">Configuración</a>
-        </div>
-        
-        <div class="logout-form">
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="btn-logout">Cerrar Sesión</button>
-            </form>
-        </div>
-    </div>
+    <div th:replace="~{fragments/sidebar :: sidebar(activePage='none')}"></div>
 
     <!-- Main Content -->
     <div class="main-content">

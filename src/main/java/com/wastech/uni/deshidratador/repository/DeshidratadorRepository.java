@@ -1,6 +1,7 @@
 package com.wastech.uni.deshidratador.repository;
 
 import com.wastech.uni.deshidratador.entity.Deshidratador;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,10 @@ import java.util.List;
  */
 @Repository
 public interface DeshidratadorRepository extends JpaRepository<Deshidratador, Long> {
+
+    @Override
+    @EntityGraph(attributePaths = "arduino")
+    List<Deshidratador> findAll();
 
     List<Deshidratador> findByArduinoIdArduino(Long idArduino);
 }

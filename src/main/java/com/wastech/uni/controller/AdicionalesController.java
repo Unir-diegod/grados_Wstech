@@ -6,23 +6,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AdicionalesController {
 
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/dashboard";
+    }
+
+    @GetMapping("/resultados")
+    public String resultados() {
+        return "resultados/lista";
+    }
+
     @GetMapping("/compostaje")
     public String compostaje() {
-        return "en-construccion";
+        return "tipo-compostaje/lista";
     }
 
     @GetMapping("/sensores")
     public String sensores() {
-        return "en-construccion";
+        return "sensores/lista";
     }
 
     @GetMapping("/reportes")
     public String reportes() {
-        return "en-construccion";
+        return "resultados/lista";
     }
 
     @GetMapping("/configuracion")
     public String configuracion() {
-        return "en-construccion";
+        return "ajustes/lista";
     }
 }

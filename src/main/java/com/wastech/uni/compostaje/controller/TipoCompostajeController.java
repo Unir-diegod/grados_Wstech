@@ -1,7 +1,5 @@
 package com.wastech.uni.compostaje.controller;
 
-import com.wastech.uni.compostaje.service.TipoCompostajeService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/tipo-compostaje")
-@RequiredArgsConstructor
 public class TipoCompostajeController {
 
-    private final TipoCompostajeService tipoCompostajeService;
+    @org.springframework.web.bind.annotation.GetMapping
+    public String index() {
+        return "tipo-compostaje/lista";
+    }
 }

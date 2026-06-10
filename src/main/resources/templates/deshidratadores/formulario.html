@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Nuevo Deshidratador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root { --primary:#2ecc71; --bg:#f4f7f6; --text:#1e293b; --muted:#64748b; --line:#e2e8f0; }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+        body{min-height:100vh;display:flex;background:var(--bg);color:var(--text)}
+        .main{flex:1;padding:40px;overflow:auto}
+        .card{background:#fff;border-radius:20px;box-shadow:0 12px 34px rgba(22,31,42,.05);padding:28px}
+        .header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+        .header h1{font-size:32px;letter-spacing:-.03em}
+        .header p{color:var(--muted)}
+        .note{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;border-radius:14px;padding:14px 16px;margin-bottom:18px;display:flex;gap:8px;align-items:center}
+        .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+        .field{display:flex;flex-direction:column;gap:8px}
+        .field label{font-weight:700;font-size:13px}
+        .field input,.field select{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff}
+        .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:12px;text-decoration:none;font-weight:700;border:0}
+        .btn.primary{background:var(--primary);color:#fff}
+        .btn.ghost{background:#eef2f1;color:var(--text)}
+        @media (max-width: 900px){body{flex-direction:column}.main{padding:22px}.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar(activePage='deshidratadores')}"></div>
+
+    <main class="main">
+        <div class="card">
+            <div class="header">
+                <div>
+                    <h1>Nuevo deshidratador</h1>
+                    <p>Formulario demostrativo para sumar una segunda unidad con Arduino UNO.</p>
+                </div>
+                <a class="btn ghost" th:href="@{/deshidratadores}"><i class="ph ph-arrow-left"></i> Volver</a>
+            </div>
+
+            <div class="note"><i class="ph ph-info"></i> Esta pantalla está pensada para verse lista sin depender todavía de persistencia real.</div>
+
+            <div class="grid">
+                <div class="field">
+                    <label>Nombre del equipo</label>
+                    <input type="text" value="Deshidratador 2" readonly>
+                </div>
+                <div class="field">
+                    <label>Arduino</label>
+                    <select disabled>
+                        <option selected>UNO</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Temperatura objetivo</label>
+                    <input type="text" value="65°C" readonly>
+                </div>
+                <div class="field">
+                    <label>Estado inicial</label>
+                    <input type="text" value="Pendiente de activación" readonly>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a class="btn primary" href="#"><i class="ph ph-plus"></i> Guardar deshidratador</a>
+                <a class="btn ghost" th:href="@{/deshidratadores}">Cancelar</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

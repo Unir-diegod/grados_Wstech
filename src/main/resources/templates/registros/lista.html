@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - Gestión de Ciclos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #10B981;
+            --primary-dark: #059669;
+            --primary-glow: rgba(16, 185, 129, 0.2);
+            --bg-color: #f8fafc;
+            --sidebar-bg: #0f172a;
+            --text-dark: #0f17 slate;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --panel-bg: #ffffff;
+            --border: #e2e8f0;
+            --success: #10B981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --info: #3b82f6;
+            --info-bg: rgba(59, 130, 246, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-section h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+
+        .header-section p {
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-size: 14px;
+        }
+
+        /* Cards and Panels */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1100px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .panel-header i {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .panel-body {
+            padding: 24px;
+        }
+
+        /* Forms and Controls */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #f8fafc;
+            color: var(--text-main);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        /* Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+
+        .custom-table th, .custom-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .custom-table th {
+            background: #f8fafc;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .custom-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-active {
+            background: var(--success-bg);
+            color: var(--primary-dark);
+        }
+
+        .badge-finalized {
+            background: var(--info-bg);
+            color: var(--info);
+        }
+
+        /* Alert notifications */
+        .alert {
+            padding: 14px 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: fadeIn 0.4s;
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--primary-dark);
+        }
+
+        .alert-error {
+            background: var(--danger-bg);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar(activePage='reportes')}" class="sidebar"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <div class="header-section">
+            <div>
+                <h1>Gestión de Ciclos</h1>
+                <p>Monitoreo, filtros de historial e inicio de ciclos de deshidratación.</p>
+            </div>
+            <div>
+                <a th:href="@{/dashboard}" class="btn btn-outline"><i class="ph ph-arrow-left"></i> Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Banners de Notificaciones -->
+        <div th:if="${exito}" class="alert alert-success">
+            <i class="ph ph-check-circle" style="font-size: 22px;"></i>
+            <span th:text="${exito}">Operación exitosa</span>
+        </div>
+        <div th:if="${error}" class="alert alert-error">
+            <i class="ph ph-warning-circle" style="font-size: 22px;"></i>
+            <span th:text="${error}">Ha ocurrido un error</span>
+        </div>
+
+        <div class="grid-layout">
+            
+            <!-- Iniciar Nuevo Ciclo -->
+            <div class="panel">
+                <div class="panel-header">
+                    <i class="ph ph-play-circle"></i>
+                    <h2>Iniciar Nuevo Ciclo</h2>
+                </div>
+                <div class="panel-body">
+                    <form th:action="@{/registros/iniciar}" method="post">
+                        
+                        <div class="form-group">
+                            <label for="idDeshidratador">Deshidratador</label>
+                            <select id="idDeshidratador" name="idDeshidratador" class="form-control" required>
+                                <option value="" disabled selected>Selecciona deshidratador...</option>
+                                <option th:each="des : ${deshidratadores}" th:value="${des.idDeshidratador}" 
+                                        th:text="${'Deshidratador DH-' + des.idDeshidratador + ' (' + des.arduino.nombre + ')'}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cedula">Cliente</label>
+                            <select id="cedula" name="cedula" class="form-control" required>
+                                <option value="" disabled selected>Selecciona cliente...</option>
+                                <option th:each="cli : ${clientes}" th:value="${cli.cedula}" 
+                                        th:text="${cli.nombre1 + ' ' + cli.apellido1 + ' (Céd: ' + cli.cedula + ')'}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idCompostaje">Tipo de Compostaje</label>
+                            <select id="idCompostaje" name="idCompostaje" class="form-control" required>
+                                <option value="" disabled selected>Selecciona compuestos...</option>
+                                <option th:each="comp : ${tiposCompostaje}" th:value="${comp.idCompostaje}" 
+                                        th:text="${comp.compuestos + ' (Máx: ' + comp.temperaturaLiminte + '°C)'}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idMatep">Tipo de Materia Prima</label>
+                            <select id="idMatep" name="idMatep" class="form-control" required>
+                                <option value="" disabled selected>Selecciona materia prima...</option>
+                                <option th:each="mat : ${tiposMateriaPrima}" th:value="${mat.idMatep}" 
+                                        th:text="${mat.nombre}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad (kg)</label>
+                            <input type="number" step="0.1" id="cantidad" name="cantidad" class="form-control" placeholder="10.5" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+                            <i class="ph ph-play"></i> Iniciar Ciclo Activo
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Filtros de Búsqueda de Historial -->
+            <div class="panel">
+                <div class="panel-header">
+                    <i class="ph ph-funnel"></i>
+                    <h2>Filtro de Historial (Rango de Fechas)</h2>
+                </div>
+                <div class="panel-body">
+                    <form th:action="@{/registros}" method="get" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                        <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+                            <label for="fechaInicio">Fecha Inicio</label>
+                            <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" th:value="${fechaInicio}" required>
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+                            <label for="fechaFin">Fecha Fin</label>
+                            <input type="date" id="fechaFin" name="fechaFin" class="form-control" th:value="${fechaFin}" required>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" class="btn btn-primary"><i class="ph ph-magnifying-glass"></i> Filtrar</button>
+                            <a th:href="@{/registros}" class="btn btn-outline"><i class="ph ph-x"></i> Limpiar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Listado General de Registros -->
+        <div class="panel" style="margin-top: 30px;">
+            <div class="panel-header">
+                <i class="ph ph-list-dashes"></i>
+                <h2>Listado Histórico y de Control</h2>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Deshidratador</th>
+                                <th>Materia Prima</th>
+                                <th>Cantidad</th>
+                                <th>Temp / Hum</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reg : ${registros}">
+                                <td th:text="${'#' + reg.idRegistro}">#1</td>
+                                <td th:text="${'DH-' + reg.deshidratador.idDeshidratador}">DH-1</td>
+                                <td th:text="${reg.tipoMateriaPrima.nombre}">Orgánica</td>
+                                <td th:text="${reg.cantidad + ' kg'}">10 kg</td>
+                                <td>
+                                    <span th:text="${reg.temperatura + '°C / ' + reg.humedad + '%'}">0°C / 0%</span>
+                                </td>
+                                <td th:text="${#temporals.format(reg.fechaInicio, 'dd/MM/yyyy HH:mm')}">01/01/2026 12:00</td>
+                                <td th:text="${reg.fechaFin != null ? #temporals.format(reg.fechaFin, 'dd/MM/yyyy HH:mm') : '-'}">-</td>
+                                <td>
+                                    <span class="badge" th:classappend="${'ACTIVO'.equalsIgnoreCase(reg.estado) ? 'badge-active' : 'badge-finalized'}">
+                                        <i th:class="${'ACTIVO'.equalsIgnoreCase(reg.estado) ? 'ph ph-play' : 'ph ph-check'}"></i>
+                                        <span th:text="${reg.estado}">ACTIVO</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 8px;">
+                                        <!-- Botón de Finalizar (Solo si está activo) -->
+                                        <form th:if="${'ACTIVO'.equalsIgnoreCase(reg.estado)}" th:action="@{/registros/cerrar/{id}(id=${reg.idRegistro})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">
+                                                <i class="ph ph-stop"></i> Cerrar
+                                            </button>
+                                        </form>
+                                        <!-- Ver Gráfico (siempre disponible) -->
+                                        <a th:href="@{/registros/grafico/{id}(id=${reg.idRegistro})}" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">
+                                            <i class="ph ph-chart-line"></i> Gráfico
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(registros)}">
+                                <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                                    No se encontraron ciclos de compostaje en el sistema.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

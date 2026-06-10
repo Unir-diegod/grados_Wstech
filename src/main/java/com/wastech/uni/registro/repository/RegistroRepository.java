@@ -4,6 +4,7 @@ import com.wastech.uni.registro.entity.Registro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -15,4 +16,6 @@ public interface RegistroRepository extends JpaRepository<Registro, Long> {
     List<Registro> findByEstado(String estado);
 
     List<Registro> findByDeshidratadorIdDeshidratador(Long idDeshidratador);
+
+    List<Registro> findByFechaInicioBetween(LocalDateTime inicio, LocalDateTime fin);
 }

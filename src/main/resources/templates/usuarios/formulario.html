@@ -10,7 +10,6 @@
         :root {
             --primary: #2ECC71;
             --bg-color: #f4f7f6;
-            --sidebar-bg: #1a1a2e;
             --text-dark: #2c3e50;
             --text-light: #ffffff;
             --card-bg: #ffffff;
@@ -20,12 +19,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body { background-color: var(--bg-color); color: var(--text-dark); display: flex; height: 100vh; }
-
-        .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 20px 0; }
-        .logo { font-size: 24px; font-weight: 700; color: var(--primary); text-align: center; margin-bottom: 40px; }
-        .logo span { color: var(--text-light); }
-        .nav-item { padding: 15px 25px; color: #A0A0B0; text-decoration: none; display: block; transition: all 0.3s; }
-        .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.05); color: var(--text-light); border-left: 4px solid var(--primary); }
 
         .main-content { flex: 1; padding: 40px; overflow-y: auto; }
         .header { margin-bottom: 40px; }
@@ -55,19 +48,7 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="logo"><img th:src="@{/img/logo.jpeg}" alt="Wastech" style="width: 120px; height: auto; border-radius: 8px;"></div>
-        <div class="nav-items">
-            <a th:href="@{/dashboard}" class="nav-item">Dashboard</a>
-            <a th:href="@{/usuarios}" class="nav-item active">Usuarios</a>
-            <a th:href="@{/clientes}" class="nav-item">Clientes</a>
-            <a th:href="@{/deshidratadores}" class="nav-item">Deshidratadores</a>
-            <a th:href="@{/compostaje}" class="nav-item">Compostaje</a>
-            <a th:href="@{/sensores}" class="nav-item">Sensores IoT</a>
-            <a th:href="@{/reportes}" class="nav-item">Reportes</a>
-            <a th:href="@{/configuracion}" class="nav-item">Configuración</a>
-        </div>
-    </div>
+    <div th:replace="~{fragments/sidebar :: sidebar(activePage='usuarios')}"></div>
 
     <div class="main-content">
         <div class="header">
