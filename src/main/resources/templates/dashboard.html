@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wastech - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         :root {
             --primary: #2ECC71;
+            --primary-dark: #27AE60;
             --bg-color: #f4f7f6;
             --sidebar-bg: #1a1a2e;
             --text-dark: #2c3e50;
             --text-light: #ffffff;
             --card-bg: #ffffff;
+            --muted: #7f8c8d;
+            --border: #e8ecef;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #3498db;
         }
 
         * {
@@ -53,6 +60,7 @@
 
         .nav-items {
             flex: 1;
+            overflow-y: auto;
         }
 
         .nav-item {
@@ -94,36 +102,43 @@
         /* Main Content */
         .main-content {
             flex: 1;
-            padding: 40px;
+            padding: 36px 40px;
             overflow-y: auto;
         }
 
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .welcome-msg h1 {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
+            color: var(--text-dark);
         }
 
         .welcome-msg p {
-            color: #7f8c8d;
-            margin-top: 5px;
+            color: var(--muted);
+            margin-top: 4px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .user-badge {
             background: var(--card-bg);
             padding: 10px 20px;
             border-radius: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             gap: 10px;
             font-weight: 600;
+            font-size: 14px;
         }
 
         .role-tag {
@@ -131,42 +146,330 @@
             color: white;
             padding: 4px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
-        /* Cards */
-        .dashboard-grid {
+        /* Section title */
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        /* Metrics */
+        .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .metric-icon.green { background: rgba(46, 204, 113, 0.12); color: var(--primary); }
+        .metric-icon.blue { background: rgba(52, 152, 219, 0.12); color: var(--info); }
+        .metric-icon.orange { background: rgba(243, 156, 18, 0.12); color: var(--warning); }
+        .metric-icon.red { background: rgba(231, 76, 60, 0.12); color: var(--danger); }
+
+        .metric-data h3 {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .metric-data .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .metric-data .value span {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .metric-data .trend {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend.up { color: var(--primary); }
+        .trend.down { color: var(--danger); }
+        .trend.neutral { color: var(--info); }
+
+        /* Main Grid: 3 columns */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-header h3 i {
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .panel-body {
+            padding: 18px 22px;
+        }
+
+        /* Status Indicators */
+        .status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .status-row .label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .status-row .label i {
+            font-size: 18px;
+            color: var(--muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.online { background: var(--primary); }
+        .status-dot.warning { background: var(--warning); }
+        .status-dot.offline { background: var(--danger); }
+
+        .status-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .badge-online { background: rgba(46, 204, 113, 0.1); color: var(--primary-dark); }
+        .badge-warning { background: rgba(243, 156, 18, 0.1); color: var(--warning); }
+        .badge-info { background: rgba(52, 152, 219, 0.1); color: var(--info); }
+
+        /* Activity List */
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.act-success { background: rgba(46, 204, 113, 0.1); color: var(--primary); }
+        .activity-icon.act-danger { background: rgba(231, 76, 60, 0.1); color: var(--danger); }
+        .activity-icon.act-info { background: rgba(52, 152, 219, 0.1); color: var(--info); }
+
+        .activity-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-text strong {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .activity-text span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: #bdc3c7;
+            white-space: nowrap;
+            margin-top: 2px;
+        }
+
+        /* Progress Bars */
+        .progress-row {
+            margin-bottom: 16px;
+        }
+
+        .progress-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .progress-header span:last-child {
+            font-weight: 700;
+        }
+
+        .progress-track {
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        /* Bottom Row */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
-        .card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            border-top: 4px solid var(--primary);
-            transition: transform 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            font-size: 18px;
+        /* Quick Links */
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
             color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
             margin-bottom: 10px;
         }
 
-        .card p {
-            color: #7f8c8d;
-            font-size: 14px;
-            line-height: 1.5;
+        .quick-link:last-child {
+            margin-bottom: 0;
         }
 
+        .quick-link:hover {
+            border-color: var(--primary);
+            background: rgba(46, 204, 113, 0.04);
+        }
+
+        .quick-link i {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .quick-link .ql-arrow {
+            margin-left: auto;
+            color: #bdc3c7;
+            font-size: 16px;
+        }
+
+        @media (max-width: 1200px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .main-grid { grid-template-columns: 1fr; }
+            .bottom-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -178,6 +481,11 @@
             <a th:href="@{/dashboard}" class="nav-item active">Dashboard</a>
             <a th:href="@{/usuarios}" class="nav-item">Usuarios</a>
             <a th:href="@{/clientes}" class="nav-item">Clientes</a>
+            <a th:href="@{/deshidratadores}" class="nav-item">Deshidratadores</a>
+            <a th:href="@{/compostaje}" class="nav-item">Compostaje</a>
+            <a th:href="@{/sensores}" class="nav-item">Sensores IoT</a>
+            <a th:href="@{/reportes}" class="nav-item">Reportes</a>
+            <a th:href="@{/configuracion}" class="nav-item">Configuración</a>
         </div>
         
         <div class="logout-form">
@@ -189,30 +497,248 @@
 
     <!-- Main Content -->
     <div class="main-content">
+
+        <!-- Header -->
         <div class="header">
             <div class="welcome-msg">
-                <h1>Bienvenido de nuevo, <span th:text="${username}">Usuario</span> 👋</h1>
-                <p>Resumen de actividad para el día de hoy: <span th:text="${fecha}">01/01/2026</span></p>
+                <h1>Bienvenido, <span th:text="${username}">Usuario</span></h1>
+                <p><i class="ph ph-calendar-blank"></i> <span th:text="${fecha}">01/01/2026</span></p>
             </div>
             <div class="user-badge">
+                <i class="ph ph-user-circle" style="font-size: 22px; color: var(--primary);"></i>
                 <span th:text="${username}">User</span>
                 <span class="role-tag" th:text="${role}">ROL</span>
             </div>
         </div>
 
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3>Estado del Sistema</h3>
-                <p>Todos los sensores y deshidratadores se encuentran operando dentro de los parámetros normales.</p>
+        <!-- Metrics -->
+        <h2 class="section-title"><i class="ph ph-chart-bar"></i> Métricas Generales</h2>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon green"><i class="ph ph-users-three"></i></div>
+                <div class="metric-data">
+                    <h3>Clientes Activos</h3>
+                    <div class="value">124</div>
+                    <div class="trend up"><i class="ph ph-trend-up"></i> +12% este mes</div>
+                </div>
             </div>
-            <div class="card">
-                <h3>Prueba de Roles</h3>
-                <p>Navega a los controladores de prueba protegidos para validar permisos:</p>
-                <br>
-                <p>👉 <a th:href="@{/admin/test}">/admin/test</a> (Solo Admin)</p>
-                <p>👉 <a th:href="@{/cliente/test}">/cliente/test</a> (Admin y Cliente)</p>
+            <div class="metric-card">
+                <div class="metric-icon blue"><i class="ph ph-leaf"></i></div>
+                <div class="metric-data">
+                    <h3>Compostaje Procesado</h3>
+                    <div class="value">8.5 <span>ton</span></div>
+                    <div class="trend up"><i class="ph ph-trend-up"></i> +4.2% vs sem. ant.</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon orange"><i class="ph ph-thermometer-hot"></i></div>
+                <div class="metric-data">
+                    <h3>Deshidratadores</h3>
+                    <div class="value">42 <span>activos</span></div>
+                    <div class="trend neutral"><i class="ph ph-check-circle"></i> 98% operatividad</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon red"><i class="ph ph-warning-circle"></i></div>
+                <div class="metric-data">
+                    <h3>Alertas Pendientes</h3>
+                    <div class="value">3</div>
+                    <div class="trend down"><i class="ph ph-trend-down"></i> -2 desde ayer</div>
+                </div>
             </div>
         </div>
+
+        <!-- Main 3-Column Grid -->
+        <h2 class="section-title"><i class="ph ph-monitor"></i> Estado del Sistema</h2>
+        <div class="main-grid">
+
+            <!-- Panel: Estado de Servicios -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="ph ph-pulse"></i> Servicios</h3>
+                    <span class="status-badge badge-online">Operativo</span>
+                </div>
+                <div class="panel-body">
+                    <div class="status-row">
+                        <div class="label">
+                            <i class="ph ph-cloud-check"></i> Servidor IoT
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="status-dot online"></span>
+                            <span style="font-size: 12px; color: var(--muted);">24ms</span>
+                        </div>
+                    </div>
+                    <div class="status-row">
+                        <div class="label">
+                            <i class="ph ph-database"></i> Base de Datos
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="status-dot online"></span>
+                            <span style="font-size: 12px; color: var(--muted);">12ms</span>
+                        </div>
+                    </div>
+                    <div class="status-row">
+                        <div class="label">
+                            <i class="ph ph-broadcast"></i> Sensores MQTT
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="status-dot online"></span>
+                            <span style="font-size: 12px; color: var(--muted);">Conectado</span>
+                        </div>
+                    </div>
+                    <div class="status-row">
+                        <div class="label">
+                            <i class="ph ph-envelope-simple"></i> Servicio de Email
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="status-dot warning"></span>
+                            <span style="font-size: 12px; color: var(--warning);">Lento</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Actividad Reciente -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="ph ph-clock-counter-clockwise"></i> Actividad Reciente</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="activity-item">
+                        <div class="activity-icon act-success"><i class="ph ph-wrench"></i></div>
+                        <div class="activity-text">
+                            <strong>Mantenimiento completado</strong>
+                            <span>Deshidratador DH-402 revisado</span>
+                        </div>
+                        <div class="activity-time">Hace 2h</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon act-danger"><i class="ph ph-thermometer-hot"></i></div>
+                        <div class="activity-text">
+                            <strong>Alerta de temperatura</strong>
+                            <span>Compostera CP-12 excedió 65°C</span>
+                        </div>
+                        <div class="activity-time">Hace 5h</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon act-info"><i class="ph ph-user-plus"></i></div>
+                        <div class="activity-text">
+                            <strong>Nuevo cliente registrado</strong>
+                            <span>Empresa EcoGlobal</span>
+                        </div>
+                        <div class="activity-time">Ayer</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon act-success"><i class="ph ph-hard-drives"></i></div>
+                        <div class="activity-text">
+                            <strong>Backup semanal exitoso</strong>
+                            <span>Copia de seguridad completada</span>
+                        </div>
+                        <div class="activity-time">Ayer</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Rendimiento de Dispositivos -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="ph ph-cpu"></i> Rendimiento</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="progress-row">
+                        <div class="progress-header">
+                            <span>Deshidratadores operativos</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 95%; background: var(--primary);"></div>
+                        </div>
+                    </div>
+                    <div class="progress-row">
+                        <div class="progress-header">
+                            <span>Sensores conectados</span>
+                            <span>88%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 88%; background: var(--info);"></div>
+                        </div>
+                    </div>
+                    <div class="progress-row">
+                        <div class="progress-header">
+                            <span>Capacidad almacenamiento</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 45%; background: var(--warning);"></div>
+                        </div>
+                    </div>
+                    <div class="progress-row">
+                        <div class="progress-header">
+                            <span>Uso de API externa</span>
+                            <span>72%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 72%; background: var(--info);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="bottom-grid">
+            <!-- Accesos Rápidos -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="ph ph-lightning"></i> Accesos Rápidos</h3>
+                </div>
+                <div class="panel-body">
+                    <a th:href="@{/usuarios/nuevo}" class="quick-link">
+                        <i class="ph ph-user-plus"></i> Registrar nuevo usuario
+                        <i class="ph ph-caret-right ql-arrow"></i>
+                    </a>
+                    <a th:href="@{/clientes}" class="quick-link">
+                        <i class="ph ph-buildings"></i> Ver listado de clientes
+                        <i class="ph ph-caret-right ql-arrow"></i>
+                    </a>
+                    <a th:href="@{/deshidratadores}" class="quick-link">
+                        <i class="ph ph-thermometer-hot"></i> Gestionar deshidratadores
+                        <i class="ph ph-caret-right ql-arrow"></i>
+                    </a>
+                    <a th:href="@{/reportes}" class="quick-link">
+                        <i class="ph ph-file-text"></i> Generar reportes
+                        <i class="ph ph-caret-right ql-arrow"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Prueba de Roles -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="ph ph-shield-check"></i> Validación de Permisos</h3>
+                    <span class="status-badge badge-info">Spring Security</span>
+                </div>
+                <div class="panel-body">
+                    <a th:href="@{/admin/test}" class="quick-link">
+                        <i class="ph ph-lock-key" style="color: var(--warning);"></i>
+                        <div>
+                            <div style="font-weight: 600;">/admin/test</div>
+                            <div style="font-size: 12px; color: var(--muted); font-weight: 400;">Solo Administrador</div>
+                        </div>
+                        <i class="ph ph-caret-right ql-arrow"></i>
+                    </a>
+                    <a th:href="@{/cliente/test}" class="quick-link">
+                        <i class="ph ph-lock-simple-open" style="color: var(--info);"></i>
+                        <div>
+                            <div style="font-weight: 600;">/cliente/test</div>
+                            <div style="font-size: 12px; color: var(--muted); font-weight: 400;">Administrador y Cliente</div>
+                        </div>
+                        <i class="ph ph-caret-right ql-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </body>

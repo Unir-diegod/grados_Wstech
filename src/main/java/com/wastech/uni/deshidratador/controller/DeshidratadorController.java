@@ -14,4 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DeshidratadorController {
 
     private final DeshidratadorService deshidratadorService;
+
+    @org.springframework.web.bind.annotation.GetMapping
+    public String index() {
+        return "en-construccion";
+    }
 }
