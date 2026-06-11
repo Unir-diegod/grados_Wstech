@@ -206,6 +206,58 @@ E --> F[Proceso Activo]
 
 ---
 
+# ⚡ Caso de Uso: Registrar Lectura IoT
+
+## Actor
+
+* Arduino
+* Sistema
+
+## Objetivo
+
+Recibir y almacenar lecturas enviadas por los sensores.
+
+```mermaid
+sequenceDiagram
+
+participant Arduino
+participant Sistema
+participant BaseDatos
+
+Arduino->>Sistema: Enviar lectura de sensor
+
+Sistema->>BaseDatos: Guardar medición
+
+BaseDatos-->>Sistema: Confirmación de almacenamiento
+
+Sistema-->>Arduino: Lectura recibida
+```
+
+---
+
+# 🚨 Caso de Uso: Generar Alerta
+
+## Actores
+
+* Sistema
+* Cliente
+
+## Objetivo
+
+Detectar condiciones de riesgo y notificar al usuario.
+
+```mermaid
+flowchart TD
+
+A[Sistema]
+
+A --> B[Evaluar umbrales]
+B --> C[Generar alerta]
+C --> D[Notificar al usuario]
+```
+
+---
+
 # 🌡️ Caso de Uso: Monitorear Temperatura y Humedad
 
 ## Actores
@@ -229,6 +281,73 @@ Arduino->>Backend: Temperatura
 Arduino->>Backend: Humedad
 
 Backend-->>Cliente: Datos actualizados
+```
+
+---
+
+# Caso de Uso: Gestionar Dispositivos IoT
+
+## Actor
+
+Administrador
+
+## Objetivo
+
+Registrar, activar y desactivar dispositivos IoT.
+
+```mermaid
+flowchart TD
+
+A[Administrador]
+
+A --> B[Registrar Dispositivo]
+A --> C[Activar Dispositivo]
+A --> D[Desactivar Dispositivo]
+```
+
+---
+
+# 🔔 Caso de Uso: Notificaciones del Sistema
+
+## Actores
+
+* Cliente
+* Administrador
+
+## Objetivo
+
+Recibir alertas y eventos importantes generados por el sistema.
+
+```mermaid
+flowchart TD
+
+A[Sistema]
+
+A --> B[Detectar Evento]
+B --> C[Enviar Notificación]
+C --> D[Mostrar Alerta]
+```
+
+---
+
+# 📈 Caso de Uso: Consultar Dashboard
+
+## Actor
+
+Cliente
+
+## Objetivo
+
+Visualizar indicadores clave y métricas del sistema.
+
+```mermaid
+flowchart TD
+
+A[Cliente]
+
+A --> B[Acceder Dashboard]
+B --> C[Ver Indicadores]
+C --> D[Detectar Alertas]
 ```
 
 ---
@@ -340,19 +459,23 @@ A[Login]
 
 # 🎯 Casos de Uso Prioritarios del MVP
 
-| Prioridad | Caso de Uso               |
-| --------- | ------------------------- |
-| 🔴 Alta   | Iniciar Sesión            |
-| 🔴 Alta   | Gestionar Usuarios        |
-| 🔴 Alta   | Gestionar Clientes        |
-| 🔴 Alta   | Gestionar Materias Primas |
-| 🔴 Alta   | Gestionar Compostajes     |
-| 🔴 Alta   | Crear Proceso             |
-| 🔴 Alta   | Consultar Historial       |
-| 🟡 Media  | Monitorear Sensores       |
-| 🟡 Media  | Controlar Deshidratador   |
-| 🟢 Baja   | Generar PDF               |
-| 🟢 Baja   | Notificaciones            |
+| Prioridad | Caso de Uso                         |
+| --------- | ----------------------------------- |
+| 🔴 Alta   | Iniciar Sesión                      |
+| 🔴 Alta   | Gestionar Usuarios                  |
+| 🔴 Alta   | Gestionar Clientes                  |
+| 🔴 Alta   | Gestionar Materias Primas           |
+| 🔴 Alta   | Gestionar Compostajes               |
+| 🔴 Alta   | Crear Proceso                       |
+| 🔴 Alta   | Consultar Historial                 |
+| 🟡 Media  | Registrar Lectura IoT               |
+| 🟡 Media  | Generar Alerta                      |
+| 🟡 Media  | Monitorear Temperatura y Humedad    |
+| 🟡 Media  | Gestionar Dispositivos IoT          |
+| 🟡 Media  | Consultar Dashboard                 |
+| 🟡 Media  | Controlar Deshidratador             |
+| 🟢 Baja   | Generar PDF                         |
+| 🟢 Baja   | Notificaciones                       |
 
 ---
 
@@ -375,6 +498,12 @@ El MVP del sistema Wastech deberá permitir:
 ✅ Recepción de datos IoT
 
 ✅ Visualización de temperatura y humedad
+
+✅ Visualización de panel de control con indicadores clave
+
+✅ Gestión básica de dispositivos IoT
+
+✅ Recepción de notificaciones y eventos del sistema
 
 ---
 
