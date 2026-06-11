@@ -19,8 +19,61 @@
 <div th:replace="~{fragments/sidebar :: sidebar(activePage='compostaje')}" class="sidebar"></div>
 <main class="main">
     <section class="hero"><div><div class="pill ok"><i class="ph ph-leaf"></i> Definición de compostaje</div><h1>Tipo Compostaje</h1></div><div class="hero-actions"><a class="btn ghost" th:href="@{/dashboard}"><i class="ph ph-arrow-left"></i> Dashboard</a><a class="btn primary" th:href="@{/registros}"><i class="ph ph-list"></i> Registros</a></div></section>
-    <section class="grid"><article class="card metric"><div class="icon green"><i class="ph ph-leaf"></i></div><div><h3>Tipo base</h3><div class="value">Orgánico</div><div class="sub">mezcla común</div></div></article><article class="card metric"><div class="icon blue"><i class="ph ph-thermometer"></i></div><div><h3>Temperatura</h3><div class="value">65°C</div><div class="sub">ideal para secado</div></div></article><article class="card metric"><div class="icon orange"><i class="ph ph-drop"></i></div><div><h3>Humedad límite</h3><div class="value">35%</div><div class="sub">para cerrar ciclo</div></div></article></section>
-    <section class="card"><div class="panel-head"><div><h2>Tipo de compostaje usado</h2><p>La idea es mostrar qué entra, qué sale y qué espera el sistema.</p></div><div class="pill info"><i class="ph ph-broadcast"></i> Una sola línea de proceso</div></div><div class="panel-body stack"><div class="step"><div class="dot green"><i class="ph ph-check"></i></div><div><strong>Materia vegetal</strong><p>Residuos limpios y secos que alimentan el proceso.</p></div></div><div class="step"><div class="dot blue"><i class="ph ph-gear"></i></div><div><strong>Control térmico</strong><p>Se mantiene el calor para reducir humedad y estabilizar el material.</p></div></div><div class="step"><div class="dot orange"><i class="ph ph-package"></i></div><div><strong>Producto final</strong><p>Compost listo para almacenamiento o despacho.</p></div></div></div></section>
+    <section class="grid">
+        <article class="card metric">
+            <div class="icon green"><i class="ph ph-leaf"></i></div>
+            <div>
+                <h3>Configuraciones</h3>
+                <div class="value" th:text="${#lists.size(tiposCompostaje)}">1</div>
+                <div class="sub">en base de datos</div>
+            </div>
+        </article>
+        <article class="card metric">
+            <div class="icon blue"><i class="ph ph-thermometer"></i></div>
+            <div>
+                <h3>Temperatura Límite</h3>
+                <div class="value" th:text="${!#lists.isEmpty(tiposCompostaje) ? tiposCompostaje[0].temperaturaLiminte + '°C' : 'N/A'}">65°C</div>
+                <div class="sub">nivel de alerta térmica</div>
+            </div>
+        </article>
+        <article class="card metric">
+            <div class="icon orange"><i class="ph ph-drop"></i></div>
+            <div>
+                <h3>Humedad Límite</h3>
+                <div class="value" th:text="${!#lists.isEmpty(tiposCompostaje) ? tiposCompostaje[0].humedadLimite + '%' : 'N/A'}">70%</div>
+                <div class="sub">umbral máximo tolerado</div>
+            </div>
+        </article>
+    </section>
+    
+    <section class="card">
+        <div class="panel-head">
+            <div>
+                <h2>Tipos de Compostaje Configurados</h2>
+                <p>Parámetros térmicos y tipos de mezcla registrados en la base de datos.</p>
+            </div>
+            <div class="pill info"><i class="ph ph-broadcast"></i> Monitoreo Activo</div>
+        </div>
+        <div class="panel-body stack">
+            <div class="step" th:each="tipo : ${tiposCompostaje}">
+                <div class="dot green"><i class="ph ph-check"></i></div>
+                <div>
+                    <strong th:text="${tipo.compuestos}">Residuos Orgánicos y Estiércol</strong>
+                    <p>
+                        Temperatura de Alerta: <span th:text="${tipo.temperaturaLiminte}">65.0</span>°C | 
+                        Humedad de Alerta: <span th:text="${tipo.humedadLimite}">70.0</span>%
+                    </p>
+                </div>
+            </div>
+            <div class="step" th:if="${#lists.isEmpty(tiposCompostaje)}">
+                <div class="dot orange"><i class="ph ph-warning-circle"></i></div>
+                <div>
+                    <strong>Sin configuraciones</strong>
+                    <p>No se encontraron tipos de compostaje registrados en la base de datos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 </body>
 </html>

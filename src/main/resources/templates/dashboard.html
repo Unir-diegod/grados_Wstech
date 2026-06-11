@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,8 @@
             --primary-dark: #27AE60;
             --primary-glow: rgba(46, 204, 113, 0.4);
             --bg-color: #f4f7f6;
-            --sidebar-bg: #0f172a; /* Deeper modern dark */
+            --sidebar-bg: #0f172a;
+            /* Deeper modern dark */
             --sidebar-hover: rgba(255, 255, 255, 0.08);
             --text-dark: #1e293b;
             --text-light: #f8fafc;
@@ -22,7 +24,7 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --info: #3b82f6;
-            
+
             /* Gradients */
             --grad-primary: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
             --grad-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
@@ -39,7 +41,7 @@
 
         body {
             background-color: var(--bg-color);
-            background-image: 
+            background-image:
                 radial-gradient(at 0% 0%, rgba(46, 204, 113, 0.05) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.05) 0px, transparent 50%);
             background-attachment: fixed;
@@ -58,7 +60,7 @@
             display: flex;
             flex-direction: column;
             padding: 24px 0;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.05);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
             z-index: 50;
         }
 
@@ -74,8 +76,14 @@
         }
 
         /* Ocultar barra de desplazamiento en sidebar */
-        .nav-items::-webkit-scrollbar { width: 4px; }
-        .nav-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .nav-items::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .nav-items::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
 
         .nav-item {
             padding: 14px 20px;
@@ -112,14 +120,19 @@
             box-shadow: 0 4px 12px var(--primary-glow);
             font-weight: 600;
         }
-        
-        .nav-item.active i { color: white; }
-        .nav-item.active:hover { transform: none; }
+
+        .nav-item.active i {
+            color: white;
+        }
+
+        .nav-item.active:hover {
+            transform: none;
+        }
 
         .logout-form {
             padding: 20px 16px;
             margin-top: auto;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .btn-logout {
@@ -153,10 +166,22 @@
             scroll-behavior: smooth;
         }
 
-        .main-content::-webkit-scrollbar { width: 8px; }
-        .main-content::-webkit-scrollbar-track { background: transparent; }
-        .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .main-content::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
 
         /* Header */
         .header {
@@ -168,8 +193,15 @@
         }
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .welcome-msg h1 {
@@ -200,7 +232,7 @@
             padding: 8px 16px;
             border-radius: 100px;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -210,7 +242,7 @@
         }
 
         .user-badge:hover {
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
             transform: translateY(-2px);
         }
 
@@ -267,7 +299,7 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
             padding: 24px;
             border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
@@ -276,30 +308,62 @@
             animation: scaleIn 0.6s ease-out backwards;
         }
 
-        .metric-card:nth-child(1) { animation-delay: 0.1s; }
-        .metric-card:nth-child(2) { animation-delay: 0.2s; }
-        .metric-card:nth-child(3) { animation-delay: 0.3s; }
-        .metric-card:nth-child(4) { animation-delay: 0.4s; }
+        .metric-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .metric-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .metric-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .metric-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
 
         @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .metric-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
         }
 
-        .metric-card.c-green::before { background: var(--grad-primary); }
-        .metric-card.c-blue::before { background: var(--grad-info); }
-        .metric-card.c-orange::before { background: var(--grad-warning); }
-        .metric-card.c-red::before { background: var(--grad-danger); }
+        .metric-card.c-green::before {
+            background: var(--grad-primary);
+        }
+
+        .metric-card.c-blue::before {
+            background: var(--grad-info);
+        }
+
+        .metric-card.c-orange::before {
+            background: var(--grad-warning);
+        }
+
+        .metric-card.c-red::before {
+            background: var(--grad-danger);
+        }
 
         .metric-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
             background: #ffffff;
         }
 
@@ -318,13 +382,32 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
 
-        .metric-icon.green { background: var(--grad-primary); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
-        .metric-icon.blue { background: var(--grad-info); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
-        .metric-icon.orange { background: var(--grad-warning); color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
-        .metric-icon.red { background: var(--grad-danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .metric-icon.green {
+            background: var(--grad-primary);
+            color: white;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .metric-icon.blue {
+            background: var(--grad-info);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .metric-icon.orange {
+            background: var(--grad-warning);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .metric-icon.red {
+            background: var(--grad-danger);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
 
         .metric-data h3 {
             font-size: 14px;
@@ -360,9 +443,20 @@
             background: #f1f5f9;
         }
 
-        .trend.up { color: var(--primary-dark); background: rgba(46, 204, 113, 0.1); }
-        .trend.down { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-        .trend.neutral { color: var(--info); background: rgba(59, 130, 246, 0.1); }
+        .trend.up {
+            color: var(--primary-dark);
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        .trend.down {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .trend.neutral {
+            color: var(--info);
+            background: rgba(59, 130, 246, 0.1);
+        }
 
         /* Main Grid: 3 columns */
         .main-grid {
@@ -376,22 +470,29 @@
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
             border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.5);
             overflow: hidden;
             transition: all 0.3s ease;
             animation: fadeIn 0.8s ease-out backwards;
             animation-delay: 0.5s;
         }
-        
+
         .panel:hover {
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
             background: #ffffff;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .panel-header {
@@ -458,9 +559,17 @@
             display: inline-block;
         }
 
-        .status-dot.online { background: var(--primary); }
-        .status-dot.warning { background: var(--warning); }
-        .status-dot.offline { background: var(--danger); }
+        .status-dot.online {
+            background: var(--primary);
+        }
+
+        .status-dot.warning {
+            background: var(--warning);
+        }
+
+        .status-dot.offline {
+            background: var(--danger);
+        }
 
         .status-badge {
             font-size: 12px;
@@ -469,9 +578,20 @@
             border-radius: 6px;
         }
 
-        .badge-online { background: rgba(46, 204, 113, 0.1); color: var(--primary-dark); }
-        .badge-warning { background: rgba(243, 156, 18, 0.1); color: var(--warning); }
-        .badge-info { background: rgba(52, 152, 219, 0.1); color: var(--info); }
+        .badge-online {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--primary-dark);
+        }
+
+        .badge-warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-info {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+        }
 
         /* Activity List */
         .activity-item {
@@ -498,9 +618,20 @@
             flex-shrink: 0;
         }
 
-        .activity-icon.act-success { background: rgba(46, 204, 113, 0.1); color: var(--primary); }
-        .activity-icon.act-danger { background: rgba(231, 76, 60, 0.1); color: var(--danger); }
-        .activity-icon.act-info { background: rgba(52, 152, 219, 0.1); color: var(--info); }
+        .activity-icon.act-success {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--primary);
+        }
+
+        .activity-icon.act-danger {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .activity-icon.act-info {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+        }
 
         .activity-text {
             flex: 1;
@@ -620,7 +751,7 @@
             margin: 0;
             font-size: 20px;
         }
-        
+
         .mobile-header .logo img {
             width: 100px !important;
             margin: 0;
@@ -638,57 +769,106 @@
         .sidebar-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
             z-index: 90;
             opacity: 0;
             transition: opacity 0.3s;
         }
-        
+
         .sidebar-overlay.show {
             opacity: 1;
         }
 
         @media (max-width: 1200px) {
-            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-            .main-grid { grid-template-columns: 1fr; }
-            .bottom-grid { grid-template-columns: 1fr; }
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 900px) {
-            body { flex-direction: column; }
-            .mobile-header { display: flex; }
-            
+            body {
+                flex-direction: column;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
             .sidebar {
                 position: fixed;
-                top: 0; left: -280px; bottom: 0;
+                top: 0;
+                left: -280px;
+                bottom: 0;
                 width: 260px;
                 z-index: 100;
                 transition: left 0.3s ease;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
             }
-            .sidebar.active { left: 0; }
-            
-            .sidebar-overlay.show { display: block; }
-            
-            .main-content { padding: 20px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 15px; margin-bottom: 24px; }
-            .user-badge { width: 100%; justify-content: space-between; }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                margin-bottom: 24px;
+            }
+
+            .user-badge {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
 
         @media (max-width: 600px) {
-            .metrics-grid { grid-template-columns: 1fr; }
-            .metric-card { padding: 18px; }
-            .panel-header, .panel-body { padding: 15px; }
-            .branding-container { display: none; }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-card {
+                padding: 18px;
+            }
+
+            .panel-header,
+            .panel-body {
+                padding: 15px;
+            }
+
+            .branding-container {
+                display: none;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Mobile Header -->
     <div class="mobile-header">
-        <div class="logo"><img th:src="@{/img/logo.jpeg}" alt="Wastech" style="width: 100px; height: auto; border-radius: 6px;"></div>
+        <div class="logo"><img th:src="@{/img/logo.jpeg}" alt="Wastech"
+                style="width: 100px; height: auto; border-radius: 6px;"></div>
         <button class="menu-toggle" id="menuToggle">
             <i class="ph ph-list"></i>
         </button>
@@ -731,7 +911,7 @@
                 <div class="metric-icon blue"><i class="ph ph-leaf"></i></div>
                 <div class="metric-data">
                     <h3>Compostaje Procesado</h3>
-                    <div class="value" id="totalCompostaje">0.0 <span>ton</span></div>
+                    <div class="value" id="totalCompostaje">0.0 <span>kg</span></div>
                     <div class="trend up"><i class="ph ph-trend-up"></i> +4.2% vs sem. ant.</div>
                 </div>
             </div>
@@ -897,7 +1077,8 @@
                         <i class="ph ph-lock-key" style="color: var(--warning);"></i>
                         <div>
                             <div style="font-weight: 600;">/admin/test</div>
-                            <div style="font-size: 12px; color: var(--muted); font-weight: 400;">Solo Administrador</div>
+                            <div style="font-size: 12px; color: var(--muted); font-weight: 400;">Solo Administrador
+                            </div>
                         </div>
                         <i class="ph ph-caret-right ql-arrow"></i>
                     </a>
@@ -905,7 +1086,8 @@
                         <i class="ph ph-lock-simple-open" style="color: var(--info);"></i>
                         <div>
                             <div style="font-weight: 600;">/cliente/test</div>
-                            <div style="font-size: 12px; color: var(--muted); font-weight: 400;">Administrador y Cliente</div>
+                            <div style="font-size: 12px; color: var(--muted); font-weight: 400;">Administrador y Cliente
+                            </div>
                         </div>
                         <i class="ph ph-caret-right ql-arrow"></i>
                     </a>
@@ -973,4 +1155,5 @@
         setInterval(actualizarDashboard, 3000);
     </script>
 </body>
+
 </html>

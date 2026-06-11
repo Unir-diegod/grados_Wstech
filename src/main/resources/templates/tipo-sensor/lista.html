@@ -19,8 +19,60 @@
 <div th:replace="~{fragments/sidebar :: sidebar(activePage='sensores')}"></div>
 <main class="main">
     <section class="hero"><div><div class="pill ok"><i class="ph ph-scan"></i> Catálogo de sensores</div><h1>Tipo Sensor</h1><p>Tipos de sensores disponibles para el sistema de monitoreo.</p></div><div class="hero-actions"><a class="btn ghost" th:href="@{/dashboard}"><i class="ph ph-arrow-left"></i> Dashboard</a><a class="btn primary" th:href="@{/sensores}"><i class="ph ph-broadcast"></i> Ir a sensores</a></div></section>
-    <section class="grid"><article class="card metric"><div class="icon green"><i class="ph ph-thermometer"></i></div><div><h3>Temperatura</h3><div class="value">1 tipo</div><div class="sub">mide el calor del proceso</div></div></article><article class="card metric"><div class="icon blue"><i class="ph ph-drop"></i></div><div><h3>Humedad</h3><div class="value">1 tipo</div><div class="sub">mide el nivel de agua</div></div></article><article class="card metric"><div class="icon orange"><i class="ph ph-plug"></i></div><div><h3>Arduino</h3><div class="value">UNO</div><div class="sub">lee ambos sensores</div></div></article></section>
-    <section class="card"><div class="panel-head"><div><h2>Tipos disponibles</h2><p>Catalogación mínima y clara.</p></div><div class="pill info"><i class="ph ph-list"></i> 2 categorías</div></div><div class="panel-body stack"><div class="step"><div class="dot green"><i class="ph ph-thermometer"></i></div><div><strong>Sensor de temperatura</strong><p>Indica si el deshidratador trabaja dentro del rango seguro.</p></div></div><div class="step"><div class="dot blue"><i class="ph ph-drop"></i></div><div><strong>Sensor de humedad</strong><p>Ayuda a decidir si el secado necesita más tiempo o más ventilación.</p></div></div></div></section>
+    <section class="grid">
+        <article class="card metric">
+            <div class="icon green"><i class="ph ph-sliders-horizontal"></i></div>
+            <div>
+                <h3>Total Categorías</h3>
+                <div class="value" th:text="${#lists.size(tiposSensores)}">2</div>
+                <div class="sub">sensores registrados</div>
+            </div>
+        </article>
+        <article class="card metric">
+            <div class="icon blue"><i class="ph ph-microchip"></i></div>
+            <div>
+                <h3>Controlador</h3>
+                <div class="value">Arduino</div>
+                <div class="sub">módulo procesador base</div>
+            </div>
+        </article>
+        <article class="card metric">
+            <div class="icon orange"><i class="ph ph-shield-check"></i></div>
+            <div>
+                <h3>Estado de Red</h3>
+                <div class="value">Activa</div>
+                <div class="sub">comunicación en línea</div>
+            </div>
+        </article>
+    </section>
+
+    <section class="card">
+        <div class="panel-head">
+            <div>
+                <h2>Tipos de Sensores Disponibles</h2>
+                <p>Categorías y catálogo registrados en el sistema.</p>
+            </div>
+            <div class="pill info"><i class="ph ph-list"></i> <span th:text="${#lists.size(tiposSensores)}">2</span> categorías</div>
+        </div>
+        <div class="panel-body stack">
+            <div class="step" th:each="tipo : ${tiposSensores}">
+                <div class="dot" th:classappend="${tipo.nombreSesor == 'TEMPERATURA' ? 'green' : 'blue'}">
+                    <i class="ph" th:classappend="${tipo.nombreSesor == 'TEMPERATURA' ? 'ph-thermometer' : 'ph-drop'}"></i>
+                </div>
+                <div>
+                    <strong th:text="${tipo.nombreSesor}">TEMPERATURA</strong>
+                    <p th:text="${tipo.nombreSesor == 'TEMPERATURA' ? 'Sensor térmico utilizado para monitorizar el calor interno del deshidratador y prevenir excesos.' : 'Sensor hidrométrico para monitorizar el porcentaje de humedad relativa en la cámara de secado.'}">Detalle del sensor.</p>
+                </div>
+            </div>
+            <div class="step" th:if="${#lists.isEmpty(tiposSensores)}">
+                <div class="dot orange"><i class="ph ph-warning-circle"></i></div>
+                <div>
+                    <strong>Sin tipos de sensores</strong>
+                    <p>No se encontraron tipos de sensores registrados en la base de datos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 </body>
 </html>

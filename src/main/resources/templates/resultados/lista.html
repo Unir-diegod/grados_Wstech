@@ -19,9 +19,101 @@
 <body>
 <div th:replace="~{fragments/sidebar :: sidebar(activePage='reportes')}" class="sidebar"></div>
 <main class="main">
-    <section class="hero"><div><div class="pill ok"><i class="ph ph-file-text"></i> Resultados de la semana</div><h1>Resultados</h1><p>Resumen semanal con producción, ciclos y calidad del proceso.</p></div><div class="hero-actions"><a class="btn ghost" th:href="@{/dashboard}"><i class="ph ph-arrow-left"></i> Dashboard</a><a class="btn primary" th:href="@{/registros}"><i class="ph ph-list"></i> Ver registros</a></div></section>
-    <section class="grid"><article class="card metric"><div class="icon green"><i class="ph ph-coins"></i></div><div><h3>Producción semanal</h3><div class="value">2.6 kg</div><div class="sub">resultado de 7 días</div></div></article><article class="card metric"><div class="icon blue"><i class="ph ph-seal-check"></i></div><div><h3>Lotes aprobados</h3><div class="value">2</div><div class="sub">listos para entrega</div></div></article><article class="card metric"><div class="icon orange"><i class="ph ph-clock"></i></div><div><h3>Promedio por ciclo</h3><div class="value">18 h</div><div class="sub">secado controlado</div></div></article><article class="card metric"><div class="icon red"><i class="ph ph-warning-circle"></i></div><div><h3>Incidencias</h3><div class="value">0</div><div class="sub">sin alertas</div></div></article></section>
-    <section class="report-grid" style="margin-top:18px;"><article class="card"><div class="panel-head"><div><h2>Resumen semanal</h2><p>Reporte breve para revisar el estado general.</p></div><div class="pill info"><i class="ph ph-activity"></i> actualizado hoy</div></div><div class="panel-body stack"><div class="report-item"><div class="report-dot green"><i class="ph ph-basket"></i></div><div><strong>Materia procesada</strong><p>El deshidratador trabajó con materia prima constante y mantuvo buen rendimiento.</p></div></div><div class="report-item"><div class="report-dot blue"><i class="ph ph-thermometer"></i></div><div><strong>Temperatura estable</strong><p>La mayor parte de la semana el proceso se mantuvo entre 34°C y 37°C.</p></div></div><div class="report-item"><div class="report-dot orange"><i class="ph ph-drop"></i></div><div><strong>Humedad controlada</strong><p>La humedad bajó de forma progresiva hasta alcanzar el valor esperado.</p></div></div></div></article><article class="card"><div class="panel-head"><div><h2>Detalle útil</h2><p>Indicadores de seguimiento.</p></div></div><div class="panel-body"><div class="table-wrap"><table><thead><tr><th>Indicador</th><th>Valor</th><th>Lectura</th></tr></thead><tbody><tr><td>Mejor lote</td><td>DH-01</td><td><span class="badge ok">Estable</span></td></tr><tr><td>Peor día</td><td>Miércoles</td><td><span class="badge warn">Más humedad</span></td></tr><tr><td>Rendimiento</td><td>92%</td><td><span class="badge info">Bueno</span></td></tr></tbody></table></div></div></article></section>
+    <section class="hero"><div><div class="pill ok"><i class="ph ph-file-text"></i> Resultados de la semana</div><h1>Resultados</h1></div><div class="hero-actions"><a class="btn ghost" th:href="@{/dashboard}"><i class="ph ph-arrow-left"></i> Dashboard</a><a class="btn primary" th:href="@{/registros}"><i class="ph ph-list"></i> Ver registros</a></div></section>
+    <section class="grid">
+        <article class="card metric">
+            <div class="icon green"><i class="ph ph-coins"></i></div>
+            <div>
+                <h3>Lotes Consolidados</h3>
+                <div class="value" th:text="${#lists.size(resultados)}">2</div>
+                <div class="sub">en base de datos</div>
+            </div>
+        </article>
+        <article class="card metric">
+            <div class="icon blue"><i class="ph ph-seal-check"></i></div>
+            <div>
+                <h3>Lote Destacado</h3>
+                <div class="value" th:text="${!#lists.isEmpty(resultados) ? 'LOT-' + resultados[0].codResultado : 'N/A'}">LOT-1</div>
+                <div class="sub">mayor rendimiento</div>
+            </div>
+        </article>
+        <article class="card metric">
+            <div class="icon orange"><i class="ph ph-clock"></i></div>
+            <div>
+                <h3>Rendimiento Medio</h3>
+                <div class="value" th:text="${!#lists.isEmpty(resultados) ? (resultados[0].valor + ( #lists.size(resultados) > 1 ? resultados[1].valor : 0.0 ) ) / #lists.size(resultados) + '%' : 'N/A'}">90%</div>
+                <div class="sub">secado controlado</div>
+            </div>
+        </article>
+        <article class="card metric">
+            <div class="icon red"><i class="ph ph-warning-circle"></i></div>
+            <div>
+                <h3>Incidencias</h3>
+                <div class="value">0</div>
+                <div class="sub">sin alertas de calidad</div>
+            </div>
+        </article>
+    </section>
+
+    <section class="report-grid" style="margin-top:18px;">
+        <article class="card">
+            <div class="panel-head">
+                <div>
+                    <h2>Resumen de Lotes</h2>
+                    <p>Reporte breve para revisar el estado general del producto.</p>
+                </div>
+                <div class="pill info"><i class="ph ph-activity"></i> Datos en Base de Datos</div>
+            </div>
+            <div class="panel-body stack">
+                <div class="report-item">
+                    <div class="report-dot green"><i class="ph ph-basket"></i></div>
+                    <div>
+                        <strong>Materia procesada</strong>
+                        <p>Los ciclos finalizados se completaron de manera satisfactoria y con humedad final bajo el límite.</p>
+                    </div>
+                </div>
+                <div class="report-item">
+                    <div class="report-dot blue"><i class="ph ph-thermometer"></i></div>
+                    <div>
+                        <strong>Temperatura promedio</strong>
+                        <p>El deshidratador mantuvo calor interno ideal regulando el calentador automáticamente.</p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="card">
+            <div class="panel-head">
+                <div>
+                    <h2>Historial de Resultados</h2>
+                    <p>Lotes registrados y consolidados en la base de datos.</p>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Lote</th>
+                                <th>Rendimiento</th>
+                                <th>Sensor ID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="res : ${resultados}">
+                                <td><strong th:text="${'LOT-' + res.codResultado}">LOT-1</strong></td>
+                                <td><span class="badge ok" th:text="${res.valor + '%'}">92.5%</span></td>
+                                <td th:text="${'Sensor #' + res.sensor.idSensor}">Sensor #1</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(resultados)}">
+                                <td colspan="3" style="text-align: center; color: var(--muted);">No hay resultados consolidados en la base de datos.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </article>
+    </section>
 </main>
 </body>
 </html>

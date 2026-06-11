@@ -5,6 +5,8 @@ DELETE FROM tipo_sensor WHERE ID_tiposensor > 2;
 DELETE FROM tipo_materia_prima WHERE ID_matep > 1;
 DELETE FROM tipo_compostaje WHERE ID_compostaje > 1;
 DELETE FROM perfil WHERE IDperfil > 2;
+DELETE FROM resultado WHERE Cod_resultado > 2;
+DELETE FROM sensores WHERE ID_sensor > 2;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Insertar roles/perfiles iniciales
@@ -36,3 +38,15 @@ INSERT IGNORE INTO deshidratador (ID_deshidratador, calentador, ID_arduino) VALU
 
 -- Insertar Cliente de prueba
 INSERT IGNORE INTO cliente (cedula, nombre_1, apellido_1, correo) VALUES ('12345', 'Juan', 'Pérez', 'juan@example.com');
+
+-- Insertar lecturas de sensores base
+INSERT IGNORE INTO sensores (ID_sensor, Frcha_lectura, Valor_lectura, ID_arduino, ID_tiposensor)
+VALUES (1, '2026-06-08 08:00:00', 65.8, 1, 1);
+INSERT IGNORE INTO sensores (ID_sensor, Frcha_lectura, Valor_lectura, ID_arduino, ID_tiposensor)
+VALUES (2, '2026-06-08 08:00:00', 34.0, 1, 2);
+
+-- Insertar Resultados de prueba
+INSERT IGNORE INTO resultado (Cod_resultado, Fecha_de_inicio, Fecha_de_fin, Valor, ID_sensor)
+VALUES (1, '2026-06-08 08:00:00', '2026-06-09 12:00:00', 92.5, 1);
+INSERT IGNORE INTO resultado (Cod_resultado, Fecha_de_inicio, Fecha_de_fin, Valor, ID_sensor)
+VALUES (2, '2026-06-09 14:00:00', '2026-06-10 10:00:00', 88.0, 2);
