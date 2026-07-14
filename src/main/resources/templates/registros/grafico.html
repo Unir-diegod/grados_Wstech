@@ -223,8 +223,8 @@
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const registroId = [[${registro.idRegistro}]];
-        const isCycleActive = [[${'ACTIVO'.equalsIgnoreCase(registro.estado)}]];
+        const registroId = /*[[${registro.idRegistro}]]*/ null;
+        const isCycleActive = /*[[${'ACTIVO'.equalsIgnoreCase(registro.estado)}]]*/ false;
         /*]]>*/
 
         let chart;

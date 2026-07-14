@@ -1,0 +1,248 @@
+================================================================================
+ANÁLISIS DE ARQUITECTURA Y COMPONENTES - TRABAJO DE GRADO
+================================================================================
+
+1. ARQUITECTURA GENERAL
+--------------------------------------------------------------------------------
+* Framework principal utilizado: Spring Boot (versión 4.0.6 / Spring Framework 6+).
+* Patrón arquitectónico: Arquitectura en capas (Controlador -> Servicio -> Repositorio -> Base de Datos) con Spring MVC para las vistas dinámicas.
+* Tecnologías utilizadas en el backend: Java 24, Spring MVC, Spring Security, Spring Data JPA.
+* Tecnologías utilizadas en el frontend: Thymeleaf, HTML5, Vanilla CSS, Vanilla Javascript y Phosphor Icons.
+* Base de datos utilizada: MySQL / MariaDB.
+* ORM utilizado: Hibernate (por medio de Spring Data JPA).
+* Librerías de seguridad utilizadas: Spring Security (Core, Web, Config) y JSON Web Token (io.jsonwebtoken: jjwt-api, jjwt-impl, jjwt-jackson).
+
+
+2. MÓDULOS FUNCIONALES
+--------------------------------------------------------------------------------
+Los módulos implementados en el sistema son:
+* Autenticación: Registro de cuentas, verificación de tokens JWT y login basado en roles de usuario.
+* Dashboard: Visualización de métricas en tiempo real (clientes, deshidratadores, compostaje procesado y alertas recientes).
+* Gestión de Usuarios: CRUD completo de usuarios del sistema administrativo.
+* Gestión de Clientes: CRUD completo y validaciones de clientes.
+* Gestión de Perfiles: Mantenimiento de perfiles y roles del sistema.
+* Gestión de Registros: Control del ciclo de deshidratación de compostaje (Inicio, Cierre y telemetría histórica).
+* Gestión de Sensores: Visualización de lecturas y estados en tiempo real.
+* Reportes: Descarga de consolidados operativos diarios, semanales y de alertas.
+* Recuperación de Contraseña: Envío de códigos temporales por SMTP (Gmail).
+
+
+3. CONTROLADORES
+--------------------------------------------------------------------------------
+A) Controladores de Vistas (Spring MVC):
+* UsuarioController:
+  - Responsabilidad: Administra el CRUD visual de usuarios.
+  - Rutas principales: /usuarios, /usuarios/nuevo, /usuarios/editar/{id}, /usuarios/inactivar/{id}
+* PasswordResetController:
+  - Responsabilidad: Administra el flujo visual de restablecimiento de contraseña.
+  - Rutas principales: /forgot-password, /reset-password
+* ResultadoController:
+  - Responsabilidad: Muestra el listado visual de lotes consolidados.
+  - Rutas principales: /resultados
+* TipoSensorController:
+  - Responsabilidad: Catálogo visual de tipos de sensores.
+  - Rutas principales: /tipo-sensor
+* AdicionalesController:
+  - Responsabilidad: Carga reportes, compostaje e interfaz general de sensores.
+  - Rutas principales: /reportes, /compostaje, /sensores
+* DashboardController:
+  - Responsabilidad: Renderiza la interfaz principal del panel.
+  - Rutas principales: /dashboard
+* LoginController:
+  - Responsabilidad: Carga el formulario de inicio de sesión.
+  - Rutas principales: /login
+* RegistroController:
+  - Responsabilidad: Controla el ciclo operativo de deshidratación y carga la gráfica de telemetría.
+  - Rutas principales: /registros, /registros/iniciar, /registros/cerrar/{id}, /registros/grafico/{id}
+* cuentaRegistroController:
+  - Responsabilidad: Creación de cuentas de usuario públicas.
+  - Rutas principales: /registro
+* PerfilController:
+  - Responsabilidad: CRUD de roles de usuario.
+  - Rutas principales: /perfiles
+* TipoMateriaPrimaController:
+  - Responsabilidad: Gestión de materias primas.
+  - Rutas principales: /tipo-materia-prima
+* DeshidratadorController:
+  - Responsabilidad: Gestión de deshidratadores asignados.
+  - Rutas principales: /deshidratadores
+* TipoCompostajeController:
+  - Responsabilidad: Gestión de mezclas y límites térmicos/hídricos.
+  - Rutas principales: /tipo-compostaje
+* ClienteController:
+  - Responsabilidad: CRUD completo de clientes.
+  - Rutas principales: /clientes, /clientes/nuevo, /clientes/editar/{cedula}
+* ArduinoController:
+  - Responsabilidad: Registro y monitoreo de microcontroladores.
+  - Rutas principales: /arduinos
+
+B) Controladores API REST (JSON):
+* LecturasApiController:
+  - Responsabilidad: Expone las lecturas históricas de un ciclo para alimentar las gráficas en tiempo real.
+  - Rutas principales: /api/registros/{id}/lecturas (GET)
+* ArduinoTelemetriaController:
+  - Responsabilidad: Recibe y procesa las lecturas de telemetría del hardware.
+  - Rutas principales: /api/sensores/lectura (POST)
+* ApiAuthController:
+  - Responsabilidad: Genera tokens JWT válidos al verificar credenciales.
+  - Rutas principales: /api/auth/login (POST)
+* DashboardApiController:
+  - Responsabilidad: Retorna las estadísticas del Dashboard en tiempo real.
+  - Rutas principales: /api/dashboard/stats (GET)
+* TestRolesController:
+  - Responsabilidad: Endpoints con seguridad para validar permisos por rol.
+  - Rutas principales: /api/test/admin, /api/test/cliente (GET)
+
+
+4. SERVICIOS
+--------------------------------------------------------------------------------
+* UsuarioService / UsuarioServiceImpl: Lógica transaccional de usuarios e inhabilitación.
+* PasswordResetService / PasswordResetServiceImpl: Genera y valida tokens temporales de contraseña; despacha correos.
+* JwtService: Generación, firma digital (HMAC) y parseo de tokens JWT.
+* CustomUserDetailsService: Carga los datos de identidad requeridos por Spring Security.
+* TipoSensorService / TipoSensorServiceImpl: Lógica asociada a categorías de sensores.
+* SensoresService / SensoresServiceImpl: Manipula telemetría general de variables.
+* ResultadoService / ResultadoServiceImpl: Registro histórico de rendimiento de lotes.
+* RegistroService / RegistroServiceImpl: Operación de ciclos activos/cerrados.
+* TipoMateriaPrimaService / TipoMateriaPrimaServiceImpl: Administración de materias primas.
+* PerfilService / PerfilServiceImpl: Administración de perfiles.
+* DeshidratadorService / DeshidratadorServiceImpl: Gestión de deshidratadores físicos.
+* ClienteService / ClienteServiceImpl: Operaciones CRUD e interacciones DTO de clientes.
+* TipoCompostajeService / TipoCompostajeServiceImpl: Gestión de compuestos y rangos de alerta.
+* ArduinoService / ArduinoServiceImpl: Configuración y estado de microcontroladores.
+
+
+5. REPOSITORIOS (Spring Data JPA)
+--------------------------------------------------------------------------------
+* AlertaRepository: Gestión de alertas por anomalías (Entidad: Alerta).
+* TipoSensorRepository: Catálogo de sensores (Entidad: TipoSensor).
+* SensoresRepository: Historial de mediciones físicas (Entidad: Sensores).
+* UsuarioRepository: Control de credenciales de usuario (Entidad: Usuario).
+* PasswordResetTokenRepository: Almacena tokens de contraseña (Entidad: PasswordResetToken).
+* ResultadoRepository: Datos de rendimiento final (Entidad: Resultado).
+* RegistroRepository: Gestión de ciclos de deshidratación (Entidad: Registro).
+* TipoMateriaPrimaRepository: Gestión de catálogo de materia prima (Entidad: TipoMateriaPrima).
+* PerfilRepository: Gestión de roles (Entidad: Perfil).
+* DeshidratadorRepository: Gestión de deshidratadores (Entidad: Deshidratador).
+* TipoCompostajeRepository: Configuración de límites (Entidad: TipoCompostaje).
+* ClienteRepository: Gestión de información demográfica (Entidad: Cliente).
+* ArduinoRepository: Control de microcontroladores (Entidad: Arduino).
+
+
+6. ENTIDADES JPA
+--------------------------------------------------------------------------------
+* Usuario (tabla "usuario")
+* PasswordResetToken (tabla "password_reset_token")
+* Perfil (tabla "perfil")
+* Cliente (tabla "Cliente")
+* Registro (tabla "resgistro")
+* Deshidratador (tabla "deshidratador")
+* Arduino (tabla "arduino")
+* TipoSensor (tabla "tipo_sensor")
+* Sensores (tabla "Sensores")
+* Alerta (tabla "alerta")
+* TipoMateriaPrima (tabla "tipo_materia_prima")
+* TipoCompostaje (tabla "tipo_compostaje")
+* Resultado (tabla "resultado")
+
+
+7. DTOs
+--------------------------------------------------------------------------------
+* UsuarioDTO: Modificación y alta de usuarios administrativos.
+* ClienteDTO: Transferencia de datos demográficos del cliente con validaciones.
+* RegistroCuentaDTO: Captura campos obligatorios para el autorregistro público.
+* LoginRequest (Anidado en ApiAuthController): Credenciales de inicio de sesión JSON.
+* LecturaSensorRequest (Anidado en ArduinoTelemetriaController): Lecturas JSON de hardware.
+
+
+8. SEGURIDAD
+--------------------------------------------------------------------------------
+* Marco de trabajo: Spring Security.
+* Autenticación:
+  - Interfaz web: Formulario basado en sesión tradicional.
+  - Endpoints REST: Filtrado mediante Token JWT. El filtro "JwtAuthenticationFilter" intercepta peticiones que lleven la cabecera "Authorization: Bearer <token>", valida firma y expiración a través de "JwtService" y autentica al usuario en el contexto de seguridad.
+* Clases involucradas: SecurityConfig, JwtAuthenticationFilter, JwtService, CustomUserDetailsService, DaoAuthenticationProvider.
+* Protección de rutas: Rutas estáticas de interfaz y endpoints específicos de registro y telemetría de Arduino están permitidos sin autenticar. Las rutas críticas (usuarios, perfiles, etc.) están estrictamente protegidas según el rol asignado (ej. ADMIN).
+
+
+9. API REST
+--------------------------------------------------------------------------------
+* POST /api/auth/login: Autenticación de credenciales; devuelve token JWT.
+* POST /api/sensores/lectura: Recepción de variables desde Arduino.
+* GET /api/registros/{id}/lecturas: Histórico de temperatura/humedad para dibujar la gráfica de Chart.js.
+* GET /api/dashboard/stats: Datos consolidados del panel principal.
+
+
+10. INTEGRACIÓN CON HARDWARE
+--------------------------------------------------------------------------------
+* Flujo de entrada: El módulo Arduino Uno realiza peticiones HTTP POST con cargas útiles de tipo JSON.
+* Receptor: Endpoint POST "/api/sensores/lectura" en "ArduinoTelemetriaController".
+* Procesamiento: El controlador asocia las lecturas a los sensores e identifica si hay un ciclo de deshidratación con estado "ACTIVO" enlazado a ese Arduino. Si es así, actualiza los valores del ciclo en tiempo real y, en caso de superar el umbral térmico del tipo de compostaje, crea y persiste una "Alerta".
+* Almacenamiento: Se persiste a través de "SensoresRepository" (lecturas) y "AlertaRepository" (alertas).
+* Entidades involucradas: Arduino, Deshidratador, Registro, Sensores, TipoSensor, Alerta, TipoCompostaje.
+
+
+11. COMPONENTES EXTERNOS
+--------------------------------------------------------------------------------
+* Arduino Uno: Sí, gestiona y remite lecturas de telemetría.
+* Sensor de Temperatura/Humedad (DHT11 o similar): Sí, captura variables físicas en la cámara de secado.
+* Servidor de Correo (SMTP / Gmail): Sí, envía tokens de restablecimiento de contraseña mediante "JavaMailSender".
+* MQTT / WebSockets / APIs Externas: No se utilizan. El flujo de telemetría a UI se realiza por HTTP POST y polling AJAX periódico.
+
+
+12. PERSISTENCIA
+--------------------------------------------------------------------------------
+* Motor de BD: MySQL / MariaDB (puerto 3307 por defecto).
+* ORM: Hibernate (vía JPA).
+* Flujo: Controller (recibe la petición HTTP/JSON) -> Service (gestiona la transacción y lógica de negocio) -> Repository (interactúa con la BD a través de interfaces JPA) -> MySQL.
+
+
+13. FLUJO DE NAVEGACIÓN GENERAL
+--------------------------------------------------------------------------------
+1. El usuario inicia sesión en la aplicación web mediante el frontend (Thymeleaf/JS).
+2. El frontend realiza peticiones al backend (Spring Boot) para recuperar las vistas dinámicas o consumir APIs REST.
+3. Paralelamente, el hardware Arduino envía telemetría periódicamente al backend a través de peticiones HTTP POST.
+4. El backend procesa las solicitudes, interactúa con la base de datos MySQL para leer/escribir información y actualiza el estado de las interfaces de usuario.
+
+
+14. DASHBOARD
+--------------------------------------------------------------------------------
+Muestra visualmente:
+* Total de Clientes registrados.
+* Total de Deshidratadores enlazados.
+* Total de Alertas registradas.
+* Cantidad total de compostaje procesado acumulado (kg).
+* Historial ordenado con las 10 alertas preventivas más recientes.
+
+
+15. DEPENDENCIAS ENTRE COMPONENTES
+--------------------------------------------------------------------------------
+[ Aplicación Web (HTML5 / JS / Thymeleaf) ]
+                    │
+                    ▼
+[ Spring Security (Filtros y Middleware JWT) ]
+                    │
+                    ▼
+[ Controladores (Controllers y RestControllers) ]
+                    │
+                    ▼
+[ Servicios (Capa de Negocio y Transacciones) ]
+                    │
+                    ▼
+[ Repositorios (Interfaces Spring Data JPA) ]
+                    │
+                    ▼
+[ Base de Datos (MySQL / MariaDB) ]
+
+Integración de Hardware:
+[ Dispositivo Arduino + DHT11 ]
+                    │ (Petición HTTP POST)
+                    ▼
+[ ArduinoTelemetriaController ]
+                    │
+                    ▼
+[ SensoresRepository & AlertaRepository ]
+                    │
+                    ▼
+[ Base de Datos (MySQL / MariaDB) ]
+================================================================================

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wastech - REST API Tester</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10B981;
+            --primary-dark: #059669;
+            --bg: #f3f4f6;
+            --panel: #ffffff;
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #10B981;
+            --info: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .jwt-status-bar {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            word-break: break-all;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card {
+            background: var(--panel);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .badge-post { background-color: #ecfdf5; color: #047857; }
+        .badge-get { background-color: #eff6ff; color: #1d4ed8; }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-info {
+            background-color: var(--info);
+        }
+
+        .btn-info:hover {
+            background-color: #2563eb;
+        }
+
+        .response-box {
+            margin-top: 18px;
+            background-color: #1f2937;
+            color: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 250px;
+        }
+
+        .status-indicator {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Wastech REST API Tester</h1>
+        <p>Pruebas de aceptación y verificación de endpoints para el Proyecto de Grado</p>
+    </header>
+
+    <div class="jwt-status-bar">
+        <strong>Estado del Token JWT:</strong>
+        <span id="jwtStatus">No guardado (Las peticiones protegidas fallarán hasta realizar login)</span>
+    </div>
+
+    <!-- CARD 1: LOGIN -->
+    <div class="card" id="loginCard">
+        <div class="card-header">
+            <h2>1. Autenticación y Generación de Token</h2>
+            <span class="badge badge-post">POST /api/auth/login</span>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="loginUser">Usuario</label>
+                <input type="text" id="loginUser" value="admin">
+            </div>
+            <div class="form-group">
+                <label for="loginPass">Contraseña</label>
+                <input type="password" id="loginPass" value="admin123">
+            </div>
+        </div>
+        <button class="btn" onclick="executeLogin()">Ejecutar Login (POST)</button>
+        <div class="status-indicator" id="loginStatus"></div>
+        <div class="response-box" id="loginResponse">Respuesta JSON...</div>
+    </div>
+
+    <!-- CARD 2: TELEMETRIA -->
+    <div class="card" id="telemetryCard">
+        <div class="card-header">
+            <h2>2. Recepción de Telemetría (Arduino)</h2>
+            <span class="badge badge-post">POST /api/sensores/lectura</span>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="ardId">ID Arduino</label>
+                <input type="number" id="ardId" value="1">
+            </div>
+            <div class="form-group">
+                <label for="ardTemp">Temperatura (°C)</label>
+                <input type="number" step="0.1" id="ardTemp" value="68.5">
+            </div>
+            <div class="form-group">
+                <label for="ardHum">Humedad (%)</label>
+                <input type="number" step="0.1" id="ardHum" value="32.0">
+            </div>
+        </div>
+        <button class="btn" onclick="executeTelemetry()">Enviar Telemetría (POST)</button>
+        <div class="status-indicator" id="telemetryStatus"></div>
+        <div class="response-box" id="telemetryResponse">Respuesta JSON...</div>
+    </div>
+
+    <!-- CARD 3: HISTORIAL -->
+    <div class="card" id="historyCard">
+        <div class="card-header">
+            <h2>3. Obtención de Lecturas de Ciclo</h2>
+            <span class="badge badge-get">GET /api/registros/{id}/lecturas</span>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="regId">ID Ciclo de Registro</label>
+                <input type="number" id="regId" value="1">
+            </div>
+        </div>
+        <button class="btn btn-info" onclick="executeHistory()">Consultar Historial (GET)</button>
+        <div class="status-indicator" id="historyStatus"></div>
+        <div class="response-box" id="historyResponse">Respuesta JSON...</div>
+    </div>
+</div>
+
+<script>
+    let savedToken = null;
+
+    function executeLogin() {
+        const user = document.getElementById('loginUser').value;
+        const pass = document.getElementById('loginPass').value;
+
+        const statusEl = document.getElementById('loginStatus');
+        const respEl = document.getElementById('loginResponse');
+
+        statusEl.innerHTML = 'Enviando petición...';
+        respEl.innerText = '';
+
+        fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pass })
+        })
+        .then(res => {
+            statusEl.innerHTML = `HTTP Status: <strong>${res.status} ${res.statusText}</strong>`;
+            return res.json();
+        })
+        .then(data => {
+            respEl.innerText = JSON.stringify(data, null, 2);
+            if (data.token) {
+                savedToken = data.token;
+                document.getElementById('jwtStatus').innerText = 'Bearer ' + savedToken;
+            }
+        })
+        .catch(err => {
+            statusEl.innerHTML = 'Error de conexión';
+            respEl.innerText = err.toString();
+        });
+    }
+
+    function executeTelemetry() {
+        const id = parseInt(document.getElementById('ardId').value);
+        const temp = parseFloat(document.getElementById('ardTemp').value);
+        const hum = parseFloat(document.getElementById('ardHum').value);
+
+        const statusEl = document.getElementById('telemetryStatus');
+        const respEl = document.getElementById('telemetryResponse');
+
+        statusEl.innerHTML = 'Enviando petición...';
+        respEl.innerText = '';
+
+        const headers = { 'Content-Type': 'application/json' };
+        if (savedToken) {
+            headers['Authorization'] = 'Bearer ' + savedToken;
+        }
+
+        fetch('/api/sensores/lectura', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({ idArduino: id, temperatura: temp, humedad: hum })
+        })
+        .then(res => {
+            statusEl.innerHTML = `HTTP Status: <strong>${res.status} ${res.statusText}</strong>`;
+            return res.json();
+        })
+        .then(data => {
+            respEl.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+            statusEl.innerHTML = 'Error de conexión';
+            respEl.innerText = err.toString();
+        });
+    }
+
+    function executeHistory() {
+        const id = document.getElementById('regId').value;
+
+        const statusEl = document.getElementById('historyStatus');
+        const respEl = document.getElementById('historyResponse');
+
+        statusEl.innerHTML = 'Enviando petición...';
+        respEl.innerText = '';
+
+        const headers = {};
+        if (savedToken) {
+            headers['Authorization'] = 'Bearer ' + savedToken;
+        }
+
+        fetch(`/api/registros/${id}/lecturas`, {
+            method: 'GET',
+            headers: headers
+        })
+        .then(res => {
+            statusEl.innerHTML = `HTTP Status: <strong>${res.status} ${res.statusText}</strong>`;
+            if (res.ok) {
+                return res.json();
+            }
+            return res.text();
+        })
+        .then(data => {
+            if (typeof data === 'object') {
+                respEl.innerText = JSON.stringify(data, null, 2);
+            } else {
+                respEl.innerText = data;
+            }
+        })
+        .catch(err => {
+            statusEl.innerHTML = 'Error de conexión';
+            respEl.innerText = err.toString();
+        });
+    }
+</script>
+</body>
+</html>
