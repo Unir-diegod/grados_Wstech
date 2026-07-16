@@ -343,6 +343,26 @@
             // Si el ciclo de compostaje está activo, actualizar la gráfica cada 5 segundos
             if (isCycleActive) {
                 setInterval(fetchTelemetry, 5000);
+
+                // SIMULADOR DE ARDUINO INTEGRADO PARA EL VIDEO DE GRADO
+                let mockTemp = 35.0;
+                let mockHum = 70.0;
+                setInterval(() => {
+                    mockTemp += (Math.random() * 2.2 - 0.7); // tiende a subir simulando el secado
+                    mockHum -= (Math.random() * 1.8 - 0.4);  // tiende a bajar
+                    if (mockTemp > 75) mockTemp = 60.0;
+                    if (mockHum < 20) mockHum = 55.0;
+
+                    fetch('/api/sensores/lectura', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            idArduino: 1,
+                            temperatura: parseFloat(mockTemp.toFixed(1)),
+                            humedad: parseFloat(mockHum.toFixed(1))
+                        })
+                    }).catch(err => console.error("Simulador: Error al enviar datos:", err));
+                }, 4000);
             }
         });
     </script>

@@ -8,6 +8,7 @@ DELETE FROM perfil WHERE IDperfil > 2;
 DELETE FROM resultado WHERE Cod_resultado > 2;
 DELETE FROM sensores;
 DELETE FROM resgistro;
+UPDATE cliente SET id_registro = NULL;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Insertar roles/perfiles iniciales
